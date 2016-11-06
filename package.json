@@ -1,6 +1,6 @@
 {
   "name": "siso",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "siso is a routing utility allowing to map a path to a value",
   "main": "dist/index.js",
   "engines": {
