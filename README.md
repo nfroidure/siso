@@ -1,13 +1,15 @@
 # `siso`
 > `siso` is a routing utility allowing to map a path to a value/parameters tuple.
 
+[![NPM version](https://badge.fury.io/js/siso.png)](https://npmjs.org/package/siso) [![Build status](https://secure.travis-ci.org/nfroidure/siso.png)](https://travis-ci.org/nfroidure/siso) [![Dependency Status](https://david-dm.org/nfroidure/siso.png)](https://david-dm.org/nfroidure/siso) [![devDependency Status](https://david-dm.org/nfroidure/siso/dev-status.png)](https://david-dm.org/nfroidure/siso#info=devDependencies) [![Coverage Status](https://coveralls.io/repos/nfroidure/siso/badge.png?branch=master)](https://coveralls.io/r/nfroidure/siso?branch=master) [![Code Climate](https://codeclimate.com/github/nfroidure/siso.png)](https://codeclimate.com/github/nfroidure/siso)
+
 `siso` stands for "Shit In Shit Out". It is a module intended to build routers
  without embedding a framework and falling into the gorilla banana problem ;).
  It appears it also match the French "ciseau" word pronunciation which means
  "chisel".
 
 The parameters definition somewhat matches the Swagger one so that you will
- be able to use Siso with you swagger definition easily.
+ be able to use Siso with your swagger definition easily.
 
 ## Usage
 The `siso` concept is pretty simple. You associate paths patterns to values,
