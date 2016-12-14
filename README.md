@@ -6,6 +6,9 @@
  It appears it also match the French "ciseau" word pronunciation which means
  "chisel".
 
+The parameters definition somewhat matches the Swagger one so that you will
+ be able to use Siso with you swagger definition easily.
+
 ## Usage
 The `siso` concept is pretty simple. You associate paths patterns to values,
  then you pass a path in and get values and parameters out. And that's it, fair
@@ -31,6 +34,7 @@ siso.register([
   'users',
   {
     name: 'id',
+    type: 'number',
     pattern: /^[0-9]+$/,
   },
 ], 'user.detail');
@@ -90,9 +94,9 @@ siso.register(['v1', 'users'], 'user.list');
 
 // Or parameters with a name and its corresponding node pattern
 siso.register([
- 'v1',
- 'users',
- { name: 'id', pattern: /[a-f0-9]{24}/  },
+  'v1',
+  'users',
+  { name: 'id', pattern: /[a-f0-9]{24}/, type: 'string' },
 ], 'user.details');
 ```
 <a name="find"></a>
@@ -113,9 +117,9 @@ import Siso from 'siso'
 const siso = new Siso();
 
 siso.register([
- 'v1',
- 'users',
- { name: 'userId', pattern: /[a-f0-9]{24}/  },
+  'v1',
+  'users',
+  { name: 'userId', pattern: /[a-f0-9]{24}/, type: 'string' },
 ], 'anotherValue');
 
 siso.find('v1', 'users', 'abbacacaabbacacaabbacaca');

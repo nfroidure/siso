@@ -1,3 +1,5 @@
+/* eslint node/no-unsupported-features:0 */
+
 import YError from 'yerror';
 import initDebug from 'debug';
 
@@ -6,6 +8,7 @@ const Symbol = require('es6-symbol');
 
 const PARAMETER_NODES = Symbol('PARAMETER_NODES');
 const PARAMETER_KEY_PREFIX = '__//--##,,';
+const BASE_10 = 10;
 
 export default class Siso {
   /**
@@ -13,7 +16,7 @@ export default class Siso {
    * @return {Siso}     The Siso instance
    * @example
    *
-   * import Siso from 'siso'
+   * import Siso from 'siso';
    *
    * const siso = new Siso();
    */
@@ -29,7 +32,7 @@ export default class Siso {
    * @return {void}
    * @example
    *
-   * import Siso from 'siso'
+   * import Siso from 'siso';
    *
    * const siso = new Siso();
    *
@@ -40,7 +43,7 @@ export default class Siso {
    * siso.register([
    *   'v1',
    *   'users',
-   *   { name: 'id', pattern: /[a-f0-9]{24}/  },
+   *   { name: 'id', pattern: /[a-f0-9]{24}/, type: 'string' },
    * ], 'user.details');
    */
   register(pathPatternNodes, value) {
@@ -126,14 +129,14 @@ export default class Siso {
    * @return {void}
    * @example
    *
-   * import Siso from 'siso'
+   * import Siso from 'siso';
    *
    * const siso = new Siso();
    *
    * siso.register([
    *   'v1',
    *   'users',
-   *   { name: 'userId', pattern: /[a-f0-9]{24}/  },
+   *   { name: 'userId', pattern: /[a-f0-9]{24}/, type: 'string' },
    * ], 'anotherValue');
    *
    * siso.find('v1', 'users', 'abbacacaabbacacaabbacaca');
@@ -169,11 +172,46 @@ export default class Siso {
         debug('Testing node against parameter:', pathNode, parameter);
         if(parameter.pattern.test(pathNode)) {
           candidateValue = currentMap.get(PARAMETER_KEY_PREFIX + parameter.name);
-          parameters[parameter.name] = pathNode;
+          parameters = _assignQueryStringPart(parameter, parameters, pathNode);
         }
       });
       return [candidateValue, parameters];
     }, result);
   }
 
+}
+
+function _assignQueryStringPart(paramDefinition, parameters, pathNode) {
+  // Supporting only a subset of JSON schema core
+  // http://json-schema.org/latest/json-schema-core.html#rfc.section.4.2
+  const value = 'string' === paramDefinition.type ?
+    pathNode :
+    'boolean' === paramDefinition.type ?
+    _parseBoolean(pathNode) :
+    'number' === paramDefinition.type ?
+    _parseReentrantNumber(pathNode) :
+    (() => {
+      throw new YError('E_UNSUPPORTED_TYPE', paramDefinition.name, paramDefinition.type);
+    })();
+  parameters[paramDefinition.name] = value;
+  return parameters;
+}
+
+function _parseReentrantNumber(str) {
+  const value = parseFloat(str, BASE_10);
+
+  if(value.toString(BASE_10) !== str) {
+    throw new YError('E_NON_REENTRANT_NUMBER', str, value.toString(BASE_10));
+  }
+
+  return value;
+}
+
+function _parseBoolean(str) {
+  if('true' === str) {
+    return true;
+  } else if('false' === str) {
+    return false;
+  }
+  throw new YError('E_BAD_BOOLEAN', str);
 }

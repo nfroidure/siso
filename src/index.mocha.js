@@ -1,3 +1,4 @@
+/* eslint node/no-unsupported-features:0 */
 import Siso from './index';
 import assert from 'assert';
 
@@ -50,6 +51,7 @@ describe('siso', () => {
         'users',
         {
           name: 'id',
+          type: 'string',
           pattern: /[a-f0-9]{24}/,
         },
       ], 'user.detail');
@@ -74,6 +76,7 @@ describe('siso', () => {
         'users',
         {
           name: 'userId',
+          type: 'string',
           pattern: /[a-f0-9]{24}/,
         },
       ], 'user.detail.pictures');
@@ -99,6 +102,7 @@ describe('siso', () => {
         'users',
         {
           name: 'userId',
+          type: 'string',
           pattern: /[a-f0-9]{24}/,
         },
         'pictures',
@@ -125,6 +129,7 @@ describe('siso', () => {
         'users',
         {
           name: 'userId',
+          type: 'string',
           pattern: /[a-f0-9]{24}/,
         },
       ], 'user.detail.pictures');
@@ -227,6 +232,7 @@ describe('siso', () => {
       siso.register([
         {
           name: 'id',
+          type: 'string',
           pattern: /[a-f0-9]{24}/,
         },
       ], 'id_value');
@@ -234,6 +240,7 @@ describe('siso', () => {
       siso.register([
         {
           name: 'type',
+          type: 'string',
           pattern: /lol|test/,
         },
       ], 'type_value');
@@ -266,6 +273,7 @@ describe('siso', () => {
       siso.register([
         {
           name: 'id',
+          type: 'string',
           pattern: /[a-f0-9]{24}/,
         },
         'id_test',
@@ -274,6 +282,7 @@ describe('siso', () => {
       siso.register([
         {
           name: 'type',
+          type: 'string',
           pattern: /lol|test/,
         },
         'type_test',
@@ -328,6 +337,7 @@ describe('siso', () => {
         'users',
         {
           name: 'userId',
+          type: 'string',
           pattern: /[a-f0-9]{24}/,
         },
       ], 'user.detail');
@@ -337,6 +347,7 @@ describe('siso', () => {
         'organizations',
         {
           name: 'organizationId',
+          type: 'string',
           pattern: /[a-f0-9]{24}/,
         },
       ], 'organization.detail');
@@ -355,6 +366,7 @@ describe('siso', () => {
         'users',
         {
           name: 'userId',
+          type: 'string',
           pattern: /[a-f0-9]{24}/,
         },
         'pictures',
@@ -365,6 +377,7 @@ describe('siso', () => {
         'organizations',
         {
           name: 'organizationId',
+          type: 'string',
           pattern: /[a-f0-9]{24}/,
         },
       ], 'organization.detail');
@@ -383,11 +396,13 @@ describe('siso', () => {
         'users',
         {
           name: 'userId',
+          type: 'string',
           pattern: /^[a-f0-9]{24}$/,
         },
         'pictures',
         {
           name: 'pictureNumber',
+          type: 'string',
           pattern: /^[0-9]{1}$/,
         },
       ], 'user.detail.pictures.num');
@@ -397,11 +412,13 @@ describe('siso', () => {
         'users',
         {
           name: 'userId2',
+          type: 'string',
           pattern: /[a-f0-9]{26}/,
         },
         'pictures',
         {
           name: 'pictureNumber2',
+          type: 'string',
           pattern: /[0-9]{2}/,
         },
       ], 'user2.detail.pictures.num');
@@ -456,6 +473,7 @@ describe('siso', () => {
         'users',
         {
           name: 'userId',
+          type: 'string',
           pattern: /[0-9]+/,
         },
       ], 'user.detail');
@@ -465,6 +483,7 @@ describe('siso', () => {
         'users',
         {
           name: 'userId',
+          type: 'string',
           pattern: /[0-9]+/,
         },
         'pictures',
@@ -478,6 +497,53 @@ describe('siso', () => {
       assert.deepEqual(
         siso.find(['v1', 'users', '1', 'pictures']),
         ['user.detail.pictures', { userId: 1 }]
+      );
+    });
+
+    it('should work with number param', () => {
+      const siso = new Siso();
+
+      siso.register([
+        'users',
+        {
+          name: 'id',
+          type: 'number',
+          pattern: /^[0-9]+$/,
+        },
+      ], 'id_value');
+
+      assert.deepEqual(
+        siso.find(['users', '15']),
+        ['id_value', { id: 15 }],
+        'Work with the good type in output'
+      );
+
+      assert.deepEqual(
+        siso.find(['users', '15.67']),
+        [{}.undef, {}]
+      );
+    });
+
+    it('should work with boolean param', () => {
+      const siso = new Siso();
+
+      siso.register([
+        'lamp',
+        {
+          name: 'isOn',
+          type: 'boolean',
+          pattern: /false|true/,
+        },
+      ], 'id_value');
+
+      assert.deepEqual(
+        siso.find(['lamp', 'false']),
+        ['id_value', { isOn: false }]
+      );
+
+      assert.deepEqual(
+        siso.find(['lamp', 'true']),
+        ['id_value', { isOn: true }]
       );
     });
   });
