@@ -164,7 +164,7 @@ export default class Siso {
 
       candidateValue = currentMap.get(pathNode);
       if(candidateValue) {
-        debug('Value found on the node basis:', pathNode);
+        debug('Value found on a node basis:', pathNode);
         return [candidateValue, parameters];
       }
       debug('No value found on the node basis:', pathNode);
@@ -175,6 +175,9 @@ export default class Siso {
           parameters = _assignQueryStringPart(parameter, parameters, pathNode);
         }
       });
+      if(candidateValue) {
+        debug('Value found on a paramater basis:', pathNode);
+      }
       return [candidateValue, parameters];
     }, result);
   }
