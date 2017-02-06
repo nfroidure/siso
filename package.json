@@ -70,6 +70,6 @@
   "dependencies": {
     "debug": "1.0.0",
     "es6-symbol": "^3.1.0",
-    "yerror": "^1.0.2"
+    "yerror": "^2.0.0"
   }
 }
