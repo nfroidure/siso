@@ -10,6 +10,37 @@ const PARAMETER_NODES = Symbol('PARAMETER_NODES');
 const PARAMETER_KEY_PREFIX = '__//--##,,';
 const BASE_10 = 10;
 
+/* Architecture Note #1: Design Choices
+
+I could have created a higher order function but I find
+ out easier to add routes with a method instead of
+ building an object to bind with a function, so `Siso` is
+ a JavaScript class. Also abstracting routes index format
+ gives field for a few optimizations.
+
+You may wonder why there is no mention of HTTP methods.
+ The fact is that this router is made to be generic and
+ usable either in backend, frontend or whatever needing
+ to deal with paths in some way. If you are to use `Siso`
+ for routing in an HTTP server, you should create a `Siso`
+ instance for each HTTP method you plan to support.
+
+ `Siso` allows to organize the data in an optimized for
+ search way. There are then some tradeoffs you should be
+ aware of:
+
+* fixed length: you cannot register paths with an
+ undefined length. Things like `register(['v0', '*'])`
+ where `*` means any number of nodes is not allowed.
+* one parameter per node: if you want to create a route
+ like `/coords/$lat-$lng` you'll have no way of retrieving
+`lat` and `lng` values separately from `Siso`. You will just
+ retrieve a string you'll have to parse by yourself. The
+ reason behind that is to KISS. This is an edge case in APIs
+ so i do not want it to slow down the router matching system.
+
+*/
+
 export default class Siso {
   /**
    * Create a new Siso instance
@@ -47,6 +78,12 @@ export default class Siso {
    * ], 'user.details');
    */
   register(pathPatternNodes, value) {
+    /* Architecture Note #2: Indexing with Maps in Maps
+
+    To optimize the search, the basic workflow is:
+    - find the root map with the given nodes lengths
+    - recursively find in the child maps for each nodes
+    */
     const nodesLength = pathPatternNodes.length;
     let currentMap = this._nodesLengthMap.get(nodesLength);
 
@@ -54,6 +91,13 @@ export default class Siso {
       throw new YError('E_BAD_VALUE', value);
     }
 
+    /* Architecture Note #2.1: Indexing by Nodes Length
+
+    Routers nodes are indexed by their number of nodes
+     for better performances. It saves as much string
+     comparison/regexp matching as the distribution of the
+     paths lengths.
+    */
     if(!currentMap) {
       currentMap = new Map();
       this._nodesLengthMap.set(nodesLength, currentMap);
@@ -62,6 +106,23 @@ export default class Siso {
 
     debug('Registering a new path pattern:', pathPatternNodes, value);
 
+    /* Architecture Note #2.2: Indexing each Nodes
+
+    A node can be a string, if so, we just use it as a key.
+     Otherwise, it is a parameter with some regular expressions
+     to match it, if so, there are some additionnal work.
+
+    To ensure parameters unicity we maintain a map of every
+     parameters in the `_parameters` property. Also since
+     parameters needs some regular expression mathing work,
+     we cannot just retrieve it by key. They are then put in
+     a set with the `PARAMETER_NODES` special property.
+
+    The reason why Symbols aren't used is their poor support
+     but it will be done once possible:
+     https://github.com/nfroidure/siso/issues/12
+
+    */
     pathPatternNodes.forEach((pathPatternNode, index) => {
       const isLastNode = index + 1 === nodesLength;
       let nextMap;
@@ -143,6 +204,12 @@ export default class Siso {
    * // ['anotherValue', { userId: 'abbacacaabbacacaabbacaca' }]
    */
   find(pathNodes) {
+    /* Architecture Note #3: Search workflow
+
+    To optimize nodes search, the basic workflow is:
+    - find a map with nodes lengths
+
+    */
     const nodesLength = pathNodes.length;
     const result = [this._nodesLengthMap.get(nodesLength), {}];
 
@@ -172,7 +239,7 @@ export default class Siso {
         debug('Testing node against parameter:', pathNode, parameter);
         if(parameter.pattern.test(pathNode)) {
           candidateValue = currentMap.get(PARAMETER_KEY_PREFIX + parameter.name);
-          parameters = _assignQueryStringPart(parameter, parameters, pathNode);
+          parameters = _assignParameterPart(parameter, parameters, pathNode);
         }
       });
       if(candidateValue) {
@@ -184,7 +251,7 @@ export default class Siso {
 
 }
 
-function _assignQueryStringPart(paramDefinition, parameters, pathNode) {
+function _assignParameterPart(paramDefinition, parameters, pathNode) {
   // Supporting only a subset of JSON schema core
   // http://json-schema.org/latest/json-schema-core.html#rfc.section.4.2
   const value = 'string' === paramDefinition.type ?
