@@ -43,8 +43,8 @@ You may wonder why there is no mention of HTTP methods.
 ## Indexing with Maps in Maps
 
 To optimize the search, the basic workflow is:
-    - find the root map with the given nodes lengths
-    - recursively find in the child maps for each nodes
+- find the root map with the given nodes lengths
+- recursively find in the child maps for each nodes
 
 [See in context](./src/index.js#L81-L86)
 
@@ -53,9 +53,9 @@ To optimize the search, the basic workflow is:
 ### Indexing by Nodes Length
 
 Routers nodes are indexed by their number of nodes
-     for better performances. It saves as much string
-     comparison/regexp matching as the distribution of the
-     paths lengths.
+ for better performances. It saves as much string
+ comparison/regexp matching as the distribution of the
+ paths lengths.
 
 [See in context](./src/index.js#L94-L100)
 
@@ -64,18 +64,18 @@ Routers nodes are indexed by their number of nodes
 ### Indexing each Nodes
 
 A node can be a string, if so, we just use it as a key.
-     Otherwise, it is a parameter with some regular expressions
-     to match it, if so, there are some additionnal work.
+ Otherwise, it is a parameter with some regular expressions
+ to match it, if so, there are some additionnal work.
 
-    To ensure parameters unicity we maintain a map of every
-     parameters in the `_parameters` property. Also since
-     parameters needs some regular expression mathing work,
-     we cannot just retrieve it by key. They are then put in
-     a set with the `PARAMETER_NODES` special property.
+To ensure parameters unicity we maintain a map of every
+ parameters in the `_parameters` property. Also since
+ parameters needs some regular expression mathing work,
+ we cannot just retrieve it by key. They are then put in
+ a set with the `PARAMETER_NODES` special property.
 
-    The reason why Symbols aren't used is their poor support
-     but it will be done once possible:
-     https://github.com/nfroidure/siso/issues/12
+The reason why Symbols aren't used is their poor support
+ but it will be done once possible:
+ https://github.com/nfroidure/siso/issues/12
 
 [See in context](./src/index.js#L109-L125)
 
@@ -84,7 +84,7 @@ A node can be a string, if so, we just use it as a key.
 ## Search workflow
 
 To optimize nodes search, the basic workflow is:
-    - find a map with nodes lengths
+- find a map with nodes lengths
 
 [See in context](./src/index.js#L207-L212)
 
