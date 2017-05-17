@@ -81,6 +81,7 @@
   "dependencies": {
     "debug": "2.6.1",
     "es6-symbol": "^3.1.0",
+    "regexp-tpl": "^2.0.0",
     "yerror": "^2.0.0"
   },
   "config": {

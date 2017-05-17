@@ -546,5 +546,28 @@ describe('siso', () => {
         ['id_value', { isOn: true }]
       );
     });
+
+    it('should work with enum param', () => {
+      const siso = new Siso();
+
+      siso.register([
+        'lamp',
+        {
+          name: 'isOn',
+          type: 'boolean',
+          enum: [false, true],
+        },
+      ], 'id_value');
+
+      assert.deepEqual(
+        siso.find(['lamp', 'false']),
+        ['id_value', { isOn: false }]
+      );
+
+      assert.deepEqual(
+        siso.find(['lamp', 'true']),
+        ['id_value', { isOn: true }]
+      );
+    });
   });
 });

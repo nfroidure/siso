@@ -36,7 +36,7 @@ You may wonder why there is no mention of HTTP methods.
  reason behind that is to KISS. This is an edge case in APIs
  so i do not want it to slow down the router matching system.
 
-[See in context](./src/index.js#L13-L42)
+[See in context](./src/index.js#L14-L43)
 
 
 
@@ -46,7 +46,7 @@ To optimize the search, the basic workflow is:
     - find the root map with the given nodes lengths
     - recursively find in the child maps for each nodes
 
-[See in context](./src/index.js#L81-L86)
+[See in context](./src/index.js#L82-L87)
 
 
 
@@ -57,7 +57,7 @@ Routers nodes are indexed by their number of nodes
      comparison/regexp matching as the distribution of the
      paths lengths.
 
-[See in context](./src/index.js#L94-L100)
+[See in context](./src/index.js#L95-L101)
 
 
 
@@ -77,7 +77,21 @@ A node can be a string, if so, we just use it as a key.
      but it will be done once possible:
      https://github.com/nfroidure/siso/issues/12
 
-[See in context](./src/index.js#L109-L125)
+[See in context](./src/index.js#L110-L126)
+
+
+
+### Enum or pattern
+
+Declaring an `enum` or a `pattern` property is mandatory
+     to properly registering a node.
+
+    I choosen to allow no implicit wildcard an instead require
+     to do it explicitly since it is an unfrequent pattern
+     while designing REST APIs. Mot of the time you know what
+     your node will contain and filtering it is the best option.
+
+[See in context](./src/index.js#L165-L174)
 
 
 
@@ -86,5 +100,5 @@ A node can be a string, if so, we just use it as a key.
 To optimize nodes search, the basic workflow is:
     - find a map with nodes lengths
 
-[See in context](./src/index.js#L207-L212)
+[See in context](./src/index.js#L225-L230)
 

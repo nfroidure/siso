@@ -2,6 +2,7 @@
 
 import YError from 'yerror';
 import initDebug from 'debug';
+import regExptpl from 'regexp-tpl';
 
 const debug = initDebug('siso');
 const Symbol = require('es6-symbol');
@@ -160,6 +161,23 @@ export default class Siso {
   _registerParameterNode(currentMap, isLastNode, pathPatternNode, value) {
     let nextMap;
     let paramsSet;
+
+    /* Architecture Note #2.3: Enum or pattern
+
+    Declaring an `enum` or a `pattern` property is mandatory
+     to properly registering a node.
+
+    I choosen to allow no implicit wildcard an instead require
+     to do it explicitly since it is an unfrequent pattern
+     while designing REST APIs. Mot of the time you know what
+     your node will contain and filtering it is the best option.
+    */
+    if(pathPatternNode.enum && pathPatternNode.pattern) {
+      throw new YError('E_BAD_PARAMETER', pathPatternNode.name);
+    }
+    if(pathPatternNode.enum) {
+      pathPatternNode.pattern = regExptpl([pathPatternNode], '{enum.#}');
+    }
 
     if(
       this._parameters.get(pathPatternNode.name) &&
