@@ -1,3 +1,20 @@
+<a name="2.1.0"></a>
+# [2.1.0](https://github.com/nfroidure/siso/compare/v2.0.1...v2.1.0) (2017-05-17)
+
+
+### Bug Fixes
+
+* **doc:** Fix architecture indentation by updating jsarch ([c4ab54e](https://github.com/nfroidure/siso/commit/c4ab54e))
+* **package:** update yerror to version 2.0.0 ([0690cb0](https://github.com/nfroidure/siso/commit/0690cb0))
+
+
+### Features
+
+* **Nodes registration:** Allow to declare enum properties for parameters ([ef56bba](https://github.com/nfroidure/siso/commit/ef56bba)), closes [#2](https://github.com/nfroidure/siso/issues/2)
+* **Nodes registration:** Allow to use strings for patterns since it is the swagger default ([086c412](https://github.com/nfroidure/siso/commit/086c412)), closes [#13](https://github.com/nfroidure/siso/issues/13)
+
+
+
 
 ### upcoming (2017/03/04 16:01 +00:00)
 - [#5](https://github.com/nfroidure/siso/pull/5) Update yerror to the latest version 🚀 (@nfroidure)
