@@ -100,5 +100,5 @@ Declaring an `enum` or a `pattern` property is mandatory
 To optimize nodes search, the basic workflow is:
     - find a map with nodes lengths
 
-[See in context](./src/index.js#L225-L230)
+[See in context](./src/index.js#L229-L234)
 

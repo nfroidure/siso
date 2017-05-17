@@ -179,6 +179,10 @@ export default class Siso {
       pathPatternNode.pattern = regExptpl([pathPatternNode], '{enum.#}');
     }
 
+    if('string' === typeof pathPatternNode.pattern) {
+      pathPatternNode.pattern = new RegExp(pathPatternNode.pattern);
+    }
+
     if(
       this._parameters.get(pathPatternNode.name) &&
       this._parameters.get(pathPatternNode.name).pattern.toString() !==

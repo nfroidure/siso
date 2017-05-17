@@ -52,7 +52,7 @@ describe('siso', () => {
         {
           name: 'id',
           type: 'string',
-          pattern: /[a-f0-9]{24}/,
+          pattern: '[a-f0-9]{24}',
         },
       ], 'user.detail');
     });
@@ -77,7 +77,7 @@ describe('siso', () => {
         {
           name: 'userId',
           type: 'string',
-          pattern: /[a-f0-9]{24}/,
+          pattern: '[a-f0-9]{24}',
         },
       ], 'user.detail.pictures');
 
@@ -87,7 +87,7 @@ describe('siso', () => {
           'users',
           {
             name: 'userId',
-            pattern: /[0-9]{3}/,
+            pattern: '[0-9]{3}',
           },
           'thumbnail',
         ], 'user.detail.pictures.thumbnail');
@@ -103,7 +103,7 @@ describe('siso', () => {
         {
           name: 'userId',
           type: 'string',
-          pattern: /[a-f0-9]{24}/,
+          pattern: '[a-f0-9]{24}',
         },
         'pictures',
       ], 'user.detail.pictures');
@@ -114,7 +114,7 @@ describe('siso', () => {
           'users',
           {
             name: 'userId',
-            pattern: /[a-f0-9]{24}/,
+            pattern: '[a-f0-9]{24}',
           },
           'pictures',
         ], 'user.detail.pictures2');
@@ -130,7 +130,7 @@ describe('siso', () => {
         {
           name: 'userId',
           type: 'string',
-          pattern: /[a-f0-9]{24}/,
+          pattern: '[a-f0-9]{24}',
         },
       ], 'user.detail.pictures');
 
@@ -140,7 +140,7 @@ describe('siso', () => {
           'users',
           {
             name: 'userId',
-            pattern: /[0-9]{2}/,
+            pattern: '[0-9]{2}',
           },
         ], 'user.detail.pictures2');
       }, /E_PARAM_OVERRIDE/);
@@ -233,7 +233,7 @@ describe('siso', () => {
         {
           name: 'id',
           type: 'string',
-          pattern: /[a-f0-9]{24}/,
+          pattern: '[a-f0-9]{24}',
         },
       ], 'id_value');
 
@@ -241,7 +241,7 @@ describe('siso', () => {
         {
           name: 'type',
           type: 'string',
-          pattern: /lol|test/,
+          pattern: 'lol|test',
         },
       ], 'type_value');
 
@@ -274,7 +274,7 @@ describe('siso', () => {
         {
           name: 'id',
           type: 'string',
-          pattern: /[a-f0-9]{24}/,
+          pattern: '[a-f0-9]{24}',
         },
         'id_test',
       ], 'id_value');
@@ -283,7 +283,7 @@ describe('siso', () => {
         {
           name: 'type',
           type: 'string',
-          pattern: /lol|test/,
+          pattern: 'lol|test',
         },
         'type_test',
       ], 'type_value');
@@ -338,7 +338,7 @@ describe('siso', () => {
         {
           name: 'userId',
           type: 'string',
-          pattern: /[a-f0-9]{24}/,
+          pattern: '[a-f0-9]{24}',
         },
       ], 'user.detail');
 
@@ -348,7 +348,7 @@ describe('siso', () => {
         {
           name: 'organizationId',
           type: 'string',
-          pattern: /[a-f0-9]{24}/,
+          pattern: '[a-f0-9]{24}',
         },
       ], 'organization.detail');
 
@@ -367,7 +367,7 @@ describe('siso', () => {
         {
           name: 'userId',
           type: 'string',
-          pattern: /[a-f0-9]{24}/,
+          pattern: '[a-f0-9]{24}',
         },
         'pictures',
       ], 'user.detail.pictures');
@@ -378,7 +378,7 @@ describe('siso', () => {
         {
           name: 'organizationId',
           type: 'string',
-          pattern: /[a-f0-9]{24}/,
+          pattern: '[a-f0-9]{24}',
         },
       ], 'organization.detail');
 
@@ -397,13 +397,13 @@ describe('siso', () => {
         {
           name: 'userId',
           type: 'string',
-          pattern: /^[a-f0-9]{24}$/,
+          pattern: '^[a-f0-9]{24}$',
         },
         'pictures',
         {
           name: 'pictureNumber',
           type: 'string',
-          pattern: /^[0-9]{1}$/,
+          pattern: '^[0-9]{1}$',
         },
       ], 'user.detail.pictures.num');
 
@@ -413,13 +413,13 @@ describe('siso', () => {
         {
           name: 'userId2',
           type: 'string',
-          pattern: /[a-f0-9]{26}/,
+          pattern: '[a-f0-9]{26}',
         },
         'pictures',
         {
           name: 'pictureNumber2',
           type: 'string',
-          pattern: /[0-9]{2}/,
+          pattern: '[0-9]{2}',
         },
       ], 'user2.detail.pictures.num');
 
@@ -474,7 +474,7 @@ describe('siso', () => {
         {
           name: 'userId',
           type: 'string',
-          pattern: /[0-9]+/,
+          pattern: '[0-9]+',
         },
       ], 'user.detail');
 
@@ -484,7 +484,7 @@ describe('siso', () => {
         {
           name: 'userId',
           type: 'string',
-          pattern: /[0-9]+/,
+          pattern: '[0-9]+',
         },
         'pictures',
       ], 'user.detail.pictures');
@@ -508,7 +508,7 @@ describe('siso', () => {
         {
           name: 'id',
           type: 'number',
-          pattern: /^[0-9]+$/,
+          pattern: '^[0-9]+$',
         },
       ], 'id_value');
 
@@ -532,7 +532,7 @@ describe('siso', () => {
         {
           name: 'isOn',
           type: 'boolean',
-          pattern: /false|true/,
+          pattern: 'false|true',
         },
       ], 'id_value');
 
