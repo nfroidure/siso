@@ -180,7 +180,11 @@ export default class Siso {
     }
 
     if('string' === typeof pathPatternNode.pattern) {
-      pathPatternNode.pattern = new RegExp(pathPatternNode.pattern);
+      pathPatternNode = Object.assign(
+        {},
+        pathPatternNode,
+        { pattern: new RegExp(pathPatternNode.pattern) }
+      );
     }
 
     if(
