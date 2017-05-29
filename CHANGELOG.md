@@ -1,3 +1,13 @@
+<a name="2.1.1"></a>
+## [2.1.1](https://github.com/nfroidure/siso/compare/v2.1.0...v2.1.1) (2017-05-29)
+
+
+### Bug Fixes
+
+* **Side effects:** Avoid side effects and do not mutate the input ([ddbc5a7](https://github.com/nfroidure/siso/commit/ddbc5a7)), closes [#18](https://github.com/nfroidure/siso/issues/18)
+
+
+
 <a name="2.1.0"></a>
 # [2.1.0](https://github.com/nfroidure/siso/compare/v2.0.1...v2.1.0) (2017-05-17)
 
