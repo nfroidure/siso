@@ -91,7 +91,7 @@ I choosen to allow no implicit wildcard an instead require
  while designing REST APIs. Mot of the time you know what
  your node will contain and filtering it is the best option.
 
-[See in context](./src/index.js#L165-L174)
+[See in context](./src/index.js#L176-L185)
 
 
 
@@ -100,5 +100,5 @@ I choosen to allow no implicit wildcard an instead require
 To optimize nodes search, the basic workflow is:
 - find a map with nodes lengths
 
-[See in context](./src/index.js#L233-L238)
+[See in context](./src/index.js#L247-L252)
 

@@ -88,7 +88,7 @@ export default class Siso {
     const nodesLength = pathPatternNodes.length;
     let currentMap = this._nodesLengthMap.get(nodesLength);
 
-    if('undefined' === typeof value) {
+    if ('undefined' === typeof value) {
       throw new YError('E_BAD_VALUE', value);
     }
 
@@ -99,7 +99,7 @@ export default class Siso {
      comparison/regexp matching as the distribution of the
      paths lengths.
     */
-    if(!currentMap) {
+    if (!currentMap) {
       currentMap = new Map();
       this._nodesLengthMap.set(nodesLength, currentMap);
       debug('Created a new length based key', nodesLength);
@@ -128,30 +128,41 @@ export default class Siso {
       const isLastNode = index + 1 === nodesLength;
       let nextMap;
 
-      if('string' === typeof pathPatternNode) {
+      if ('string' === typeof pathPatternNode) {
         debug('Registering a text node:', pathPatternNode);
-        nextMap = this._registerTextNode(currentMap, isLastNode, pathPatternNode, value);
+        nextMap = this._registerTextNode(
+          currentMap,
+          isLastNode,
+          pathPatternNode,
+          value,
+        );
       } else {
         debug('Registering a parameter node:', pathPatternNode);
-        nextMap = this._registerParameterNode(currentMap, isLastNode, pathPatternNode, value);
+        nextMap = this._registerParameterNode(
+          currentMap,
+          isLastNode,
+          pathPatternNode,
+          value,
+        );
       }
 
-      if(!isLastNode) {
+      if (!isLastNode) {
         currentMap = nextMap;
       }
     });
   }
 
   // disabling the '_registerTextNode' eslint rule for consistency with _registerParameterNode
-  _registerTextNode(currentMap, isLastNode, pathPatternNode, value) { // eslint-disable-line
+  _registerTextNode(currentMap, isLastNode, pathPatternNode, value) {
+    // eslint-disable-line
     let nextMap;
 
-    if(!isLastNode) {
+    if (!isLastNode) {
       nextMap = currentMap.get(pathPatternNode) || new Map();
-      if(!(nextMap instanceof Map)) {
+      if (!(nextMap instanceof Map)) {
         throw new YError('E_VALUE_OVERRIDE', pathPatternNode.name);
       }
-    } else if(currentMap.get(pathPatternNode)) {
+    } else if (currentMap.get(pathPatternNode)) {
       throw new YError('E_NODE_OVERRIDE', pathPatternNode);
     }
     currentMap.set(pathPatternNode, isLastNode ? value : nextMap);
@@ -172,41 +183,44 @@ export default class Siso {
      while designing REST APIs. Mot of the time you know what
      your node will contain and filtering it is the best option.
     */
-    if(pathPatternNode.enum && pathPatternNode.pattern) {
+    if (pathPatternNode.enum && pathPatternNode.pattern) {
       throw new YError('E_BAD_PARAMETER', pathPatternNode.name);
     }
-    if(pathPatternNode.enum) {
+    if (pathPatternNode.enum) {
       pathPatternNode.pattern = regExptpl([pathPatternNode], '{enum.#}');
     }
 
-    if('string' === typeof pathPatternNode.pattern) {
-      pathPatternNode = Object.assign(
-        {},
-        pathPatternNode,
-        { pattern: new RegExp(pathPatternNode.pattern) }
-      );
+    if ('string' === typeof pathPatternNode.pattern) {
+      pathPatternNode = Object.assign({}, pathPatternNode, {
+        pattern: new RegExp(pathPatternNode.pattern),
+      });
     }
 
-    if(
+    if (
       this._parameters.get(pathPatternNode.name) &&
       this._parameters.get(pathPatternNode.name).pattern.toString() !==
         pathPatternNode.pattern.toString()
     ) {
       throw new YError('E_PARAM_OVERRIDE', pathPatternNode.name);
     }
-    if(!isLastNode) {
-      nextMap = currentMap.get(PARAMETER_KEY_PREFIX + pathPatternNode.name) || new Map();
-      if(!(nextMap instanceof Map)) {
+    if (!isLastNode) {
+      nextMap =
+        currentMap.get(PARAMETER_KEY_PREFIX + pathPatternNode.name) ||
+        new Map();
+      if (!(nextMap instanceof Map)) {
         throw new YError('E_VALUE_OVERRIDE', pathPatternNode.name);
       }
-    } else if(currentMap.get(PARAMETER_KEY_PREFIX + pathPatternNode.name)) {
+    } else if (currentMap.get(PARAMETER_KEY_PREFIX + pathPatternNode.name)) {
       throw new YError('E_PARAM_OVERRIDE', pathPatternNode.name);
     }
     paramsSet = currentMap.get(PARAMETER_NODES) || new Set();
     paramsSet.add(pathPatternNode);
     currentMap.set(PARAMETER_NODES, paramsSet);
     this._parameters.set(pathPatternNode.name, pathPatternNode);
-    currentMap.set(PARAMETER_KEY_PREFIX + pathPatternNode.name, isLastNode ? value : nextMap);
+    currentMap.set(
+      PARAMETER_KEY_PREFIX + pathPatternNode.name,
+      isLastNode ? value : nextMap,
+    );
     return nextMap;
   }
 
@@ -241,54 +255,60 @@ export default class Siso {
 
     debug('Testing a new path:', pathNodes);
 
-    if('undefined' === typeof result[0]) {
+    if ('undefined' === typeof result[0]) {
       debug('No path pattern of this length:', nodesLength);
       return result;
     }
 
-    return pathNodes.reduce(([currentMap, parameters], pathNode, index) => {
+    return pathNodes.reduce(([currentMap, parameters], pathNode) => {
       let candidateValue;
 
       debug('Testing node:', pathNode);
-      if('undefined' === typeof currentMap) {
+      if ('undefined' === typeof currentMap) {
         debug('No map found', pathNode);
         return [currentMap, parameters];
       }
 
       candidateValue = currentMap.get(pathNode);
-      if(candidateValue) {
+      if (candidateValue) {
         debug('Value found on a node basis:', pathNode);
         return [candidateValue, parameters];
       }
       debug('No value found on the node basis:', pathNode);
-      (currentMap.get(PARAMETER_NODES) || []).forEach((parameter) => {
+      (currentMap.get(PARAMETER_NODES) || []).forEach(parameter => {
         debug('Testing node against parameter:', pathNode, parameter);
-        if(parameter.pattern.test(pathNode)) {
-          candidateValue = currentMap.get(PARAMETER_KEY_PREFIX + parameter.name);
+        if (parameter.pattern.test(pathNode)) {
+          candidateValue = currentMap.get(
+            PARAMETER_KEY_PREFIX + parameter.name,
+          );
           parameters = _assignParameterPart(parameter, parameters, pathNode);
         }
       });
-      if(candidateValue) {
+      if (candidateValue) {
         debug('Value found on a paramater basis:', pathNode);
       }
       return [candidateValue, parameters];
     }, result);
   }
-
 }
 
 function _assignParameterPart(paramDefinition, parameters, pathNode) {
   // Supporting only a subset of JSON schema core
   // http://json-schema.org/latest/json-schema-core.html#rfc.section.4.2
-  const value = 'string' === paramDefinition.type ?
-    pathNode :
-    'boolean' === paramDefinition.type ?
-    _parseBoolean(pathNode) :
-    'number' === paramDefinition.type ?
-    _parseReentrantNumber(pathNode) :
-    (() => {
-      throw new YError('E_UNSUPPORTED_TYPE', paramDefinition.name, paramDefinition.type);
-    })();
+  const value =
+    'string' === paramDefinition.type
+      ? pathNode
+      : 'boolean' === paramDefinition.type
+        ? _parseBoolean(pathNode)
+        : 'number' === paramDefinition.type
+          ? _parseReentrantNumber(pathNode)
+          : (() => {
+              throw new YError(
+                'E_UNSUPPORTED_TYPE',
+                paramDefinition.name,
+                paramDefinition.type,
+              );
+            })();
   parameters[paramDefinition.name] = value;
   return parameters;
 }
@@ -296,7 +316,7 @@ function _assignParameterPart(paramDefinition, parameters, pathNode) {
 function _parseReentrantNumber(str) {
   const value = parseFloat(str, BASE_10);
 
-  if(value.toString(BASE_10) !== str) {
+  if (value.toString(BASE_10) !== str) {
     throw new YError('E_NON_REENTRANT_NUMBER', str, value.toString(BASE_10));
   }
 
@@ -304,9 +324,9 @@ function _parseReentrantNumber(str) {
 }
 
 function _parseBoolean(str) {
-  if('true' === str) {
+  if ('true' === str) {
     return true;
-  } else if('false' === str) {
+  } else if ('false' === str) {
     return false;
   }
   throw new YError('E_BAD_BOOLEAN', str);
