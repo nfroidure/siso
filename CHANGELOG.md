@@ -1,3 +1,8 @@
+<a name="2.1.2"></a>
+## [2.1.2](https://github.com/nfroidure/siso/compare/v2.1.1...v2.1.2) (2017-12-02)
+
+
+
 <a name="2.1.1"></a>
 ## [2.1.1](https://github.com/nfroidure/siso/compare/v2.1.0...v2.1.1) (2017-05-29)
 
