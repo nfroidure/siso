@@ -4,7 +4,7 @@ import assert from 'assert';
 
 describe('siso', () => {
   describe('constructor', () => {
-    it('should work', () => {
+    test('should work', () => {
       const siso = new Siso();
 
       assert.equal(typeof siso.register, 'function');
@@ -13,13 +13,13 @@ describe('siso', () => {
   });
 
   describe('register', () => {
-    it('should work with no node', () => {
+    test('should work with no node', () => {
       const siso = new Siso();
 
       siso.register([], 'no.node');
     });
 
-    it('should work with string nodes', () => {
+    test('should work with string nodes', () => {
       const siso = new Siso();
 
       siso.register(['v1'], 'v1');
@@ -29,7 +29,7 @@ describe('siso', () => {
       siso.register(['v1', 'users', '1'], 'user.1');
     });
 
-    it('should work with parameter nodes', () => {
+    test('should work with parameter nodes', () => {
       const siso = new Siso();
 
       siso.register(['v1', 'users'], 'user.list');
@@ -48,7 +48,7 @@ describe('siso', () => {
       );
     });
 
-    it('should fail with no value', () => {
+    test('should fail with no value', () => {
       const siso = new Siso();
 
       assert.throws(() => {
@@ -56,7 +56,7 @@ describe('siso', () => {
       }, /E_BAD_VALUE/);
     });
 
-    it('should fail when registering a param with different patterns', () => {
+    test('should fail when registering a param with different patterns', () => {
       const siso = new Siso();
 
       siso.register(
@@ -88,7 +88,7 @@ describe('siso', () => {
       }, /E_PARAM_OVERRIDE/);
     });
 
-    it('should fail when registering pattern that override a value', () => {
+    test('should fail when registering pattern that override a value', () => {
       const siso = new Siso();
 
       siso.register(
@@ -121,7 +121,7 @@ describe('siso', () => {
       }, /E_NODE_OVERRIDE/);
     });
 
-    it('should fail when registering pattern that override a value', () => {
+    test('should fail when registering pattern that override a value', () => {
       const siso = new Siso();
 
       siso.register(
@@ -154,7 +154,7 @@ describe('siso', () => {
   });
 
   describe('find', () => {
-    it('should work with nothing registered', () => {
+    test('should work with nothing registered', () => {
       const siso = new Siso();
 
       assert.deepEqual(siso.find('v1'), [{}.undef, {}], 'Fail with one node');
@@ -166,7 +166,7 @@ describe('siso', () => {
       );
     });
 
-    it('should work with one string', () => {
+    test('should work with one string', () => {
       const siso = new Siso();
 
       siso.register(['v1'], 'v1_value');
@@ -192,7 +192,7 @@ describe('siso', () => {
       );
     });
 
-    it('should work with several strings', () => {
+    test('should work with several strings', () => {
       const siso = new Siso();
 
       siso.register(['v1', 'users'], 'user.list');
@@ -218,7 +218,7 @@ describe('siso', () => {
       );
     });
 
-    it('should work with only one param node', () => {
+    test('should work with only one param node', () => {
       const siso = new Siso();
 
       siso.register(
@@ -265,7 +265,7 @@ describe('siso', () => {
       );
     });
 
-    it('should work with one param at the begining', () => {
+    test('should work with one param at the begining', () => {
       const siso = new Siso();
 
       siso.register(
@@ -333,7 +333,7 @@ describe('siso', () => {
       );
     });
 
-    it('should work with one params at the end', () => {
+    test('should work with one params at the end', () => {
       const siso = new Siso();
 
       siso.register(
@@ -368,7 +368,7 @@ describe('siso', () => {
       ]);
     });
 
-    it('should work with params in the middle', () => {
+    test('should work with params in the middle', () => {
       const siso = new Siso();
 
       siso.register(
@@ -404,7 +404,7 @@ describe('siso', () => {
       );
     });
 
-    it('should work with several params', () => {
+    test('should work with several params', () => {
       const siso = new Siso();
 
       siso.register(
@@ -468,7 +468,7 @@ describe('siso', () => {
       );
     });
 
-    it('should work when registering a node that has value and subnodes', () => {
+    test('should work when registering a node that has value and subnodes', () => {
       const siso = new Siso();
 
       siso.register(['v1', 'users'], 'user.list');
@@ -483,7 +483,7 @@ describe('siso', () => {
       ]);
     });
 
-    it('should work when registering a param that has value and subnodes', () => {
+    test('should work when registering a param that has value and subnodes', () => {
       const siso = new Siso();
 
       siso.register(
@@ -524,7 +524,7 @@ describe('siso', () => {
       ]);
     });
 
-    it('should work with number param', () => {
+    test('should work with number param', () => {
       const siso = new Siso();
 
       siso.register(
@@ -548,7 +548,7 @@ describe('siso', () => {
       assert.deepEqual(siso.find(['users', '15.67']), [{}.undef, {}]);
     });
 
-    it('should work with boolean param', () => {
+    test('should work with boolean param', () => {
       const siso = new Siso();
 
       siso.register(
@@ -574,7 +574,7 @@ describe('siso', () => {
       ]);
     });
 
-    it('should work with enum param', () => {
+    test('should work with enum param', () => {
       const siso = new Siso();
 
       siso.register(
