@@ -81,7 +81,7 @@
     "metapak": "^1.0.3",
     "metapak-nfroidure": "^4.0.1",
     "prettier": "^1.11.1",
-    "sinon": "^4.4.6"
+    "sinon": "^5.0.0"
   },
   "dependencies": {
     "debug": "^3.1.0",
