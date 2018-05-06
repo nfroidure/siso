@@ -187,7 +187,9 @@ export default class Siso {
       throw new YError('E_BAD_PARAMETER', pathPatternNode.name);
     }
     if (pathPatternNode.enum) {
-      pathPatternNode.pattern = regExptpl([pathPatternNode], '{enum.#}');
+      pathPatternNode = Object.assign({}, pathPatternNode, {
+        pattern: regExptpl([pathPatternNode], '{enum.#}'),
+      });
     }
 
     if ('string' === typeof pathPatternNode.pattern) {

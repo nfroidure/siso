@@ -100,5 +100,5 @@ I choosen to allow no implicit wildcard an instead require
 To optimize nodes search, the basic workflow is:
 - find a map with nodes lengths
 
-[See in context](./src/index.js#L247-L252)
+[See in context](./src/index.js#L249-L254)
 
