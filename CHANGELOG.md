@@ -1,3 +1,13 @@
+<a name="2.2.0"></a>
+# [2.2.0](https://github.com/nfroidure/siso/compare/v2.1.3...v2.2.0) (2018-05-06)
+
+
+### Bug Fixes
+
+* **Index:** Ensure to not mute inputed params ([9d05838](https://github.com/nfroidure/siso/commit/9d05838))
+
+
+
 <a name="2.1.3"></a>
 ## [2.1.3](https://github.com/nfroidure/siso/compare/v2.1.2...v2.1.3) (2018-03-17)
 
