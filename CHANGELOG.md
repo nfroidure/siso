@@ -1,3 +1,13 @@
+## [2.2.3](https://github.com/nfroidure/siso/compare/v2.2.2...v2.2.3) (2018-11-03)
+
+
+### Bug Fixes
+
+* **Build:** Fix the package lock file ([7a2dc30](https://github.com/nfroidure/siso/commit/7a2dc30))
+* **Dependencies:** Fix issues with unlicensed deps ([9f039d4](https://github.com/nfroidure/siso/commit/9f039d4))
+
+
+
 ## [2.2.2](https://github.com/nfroidure/siso/compare/v2.2.1...v2.2.2) (2018-11-03)
 
 
