@@ -12,9 +12,13 @@
       "testsFiles": "src/*.test.js",
       "ignore": [
         "dist"
+      ],
+      "bundleFiles": [
+        "'dist/**/*.js'"
       ]
     },
     "configs": [
+      "main",
       "jsdocs",
       "jsarch",
       "readme",
@@ -26,25 +30,28 @@
     ]
   },
   "files": [
-    "dist",
-    "src"
+    "'dist/**/*.js'",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
   ],
   "scripts": {
-    "architecture": "jsarch src/*.js > ARCHITECTURE.md",
+    "architecture": "jsarch src/*.js > ARCHITECTURE.md && git add ARCHITECTURE.md",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "cli": "env NODE_ENV=${NODE_ENV:-cli}",
     "compile": "babel src --out-dir=dist",
     "cover": "npm run jest -- --coverage",
     "coveralls": "npm run cover && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "cz": "env NODE_ENV=${NODE_ENV:-cli} git cz",
-    "doc": "echo \"# API\" > API.md; jsdoc2md src/*.js >> API.md",
+    "doc": "echo \"# API\" > API.md; jsdoc2md src/*.js >> API.md && git add API.md",
     "jest": "NODE_ENV=test jest",
     "lint": "eslint src/*.js",
     "metapak": "metapak",
     "mocha": "mocha --compilers js:babel-register src/*.mocha.js",
+    "precz": "npm t && npm run lint && npm run metapak -- -s && npm run doc && npm run architecture",
     "prepublish": "npm run compile",
     "prettier": "prettier --write src/*.js",
-    "preversion": "npm t && npm run lint && npm run metapak -s && npm run compile",
+    "preversion": "npm t && npm run lint && npm run metapak -s && npm run compile && npm run metapak -- -s && npm run doc && npm run architecture",
     "test": "npm run jest",
     "version": "npm run changelog && git add CHANGELOG.md"
   },
@@ -57,38 +64,40 @@
     "router",
     "value"
   ],
-  "author": "Nicolas Froidure",
+  "author": {
+    "name": "Nicolas Froidure",
+    "email": "nicolas.froidure@insertafter.com",
+    "url": "http://insertafter.com/en/index.html"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/nfroidure/siso/issues"
   },
   "homepage": "https://github.com/nfroidure/siso#readme",
   "devDependencies": {
-    "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.0.1",
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
     "@babel/register": "^7.0.0",
     "babel-core": "^7.0.0-0",
-    "babel-eslint": "^9.0.0",
-    "babel-plugin-transform-es2015-modules-systemjs": "^6.9.0",
-    "babel-preset-es2015": "^6.9.0",
-    "commitizen": "^2.10.1",
-    "conventional-changelog-cli": "^2.0.5",
+    "babel-eslint": "^10.0.1",
+    "commitizen": "^3.0.4",
+    "conventional-changelog-cli": "^2.0.11",
     "coveralls": "^3.0.2",
     "cz-conventional-changelog": "^2.1.0",
-    "eslint": "^5.6.0",
-    "eslint-plugin-prettier": "^2.6.2",
+    "eslint": "^5.8.0",
+    "eslint-plugin-prettier": "^3.0.0",
     "jest": "^23.6.0",
     "jsarch": "^1.3.0",
-    "jsdoc-to-markdown": "^3.1.0-0",
-    "metapak": "^1.0.3",
-    "metapak-nfroidure": "^6.3.0",
-    "prettier": "^1.14.2",
+    "jsdoc-to-markdown": "^4.0.1",
+    "metapak": "^2.0.0",
+    "metapak-nfroidure": "8.3.1",
+    "prettier": "^1.14.3",
     "sinon": "^6.3.3"
   },
   "dependencies": {
-    "debug": "^4.0.1",
+    "debug": "^4.1.0",
     "es6-symbol": "^3.1.1",
     "regexp-tpl": "^2.0.0",
     "yerror": "^2.1.3"
@@ -134,5 +143,33 @@
     "plugins": [
       "@babel/plugin-proposal-object-rest-spread"
     ]
+  },
+  "contributors": [],
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+    "parserOptions": {
+      "ecmaVersion": 2018,
+      "sourceType": "module",
+      "modules": true
+    },
+    "env": {
+      "es6": true,
+      "node": true,
+      "jest": true,
+      "mocha": true
+    },
+    "plugins": [
+      "prettier"
+    ],
+    "rules": {
+      "prettier/prettier": "error"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "printWidth": 80,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "proseWrap": "always"
   }
 }

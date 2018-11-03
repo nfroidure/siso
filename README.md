@@ -7,13 +7,14 @@
 # siso
 > siso is a routing utility allowing to map a path to a value
 
-[![NPM version](https://badge.fury.io/js/siso.svg)](https://npmjs.org/package/siso)
 [![Build status](https://secure.travis-ci.org/nfroidure/siso.svg)](https://travis-ci.org/nfroidure/siso)
+[![Coverage Status](https://coveralls.io/repos/nfroidure/siso/badge.svg?branch=master)](https://coveralls.io/r/nfroidure/siso?branch=master)
+[![NPM version](https://badge.fury.io/js/siso.svg)](https://npmjs.org/package/siso)
 [![Dependency Status](https://david-dm.org/nfroidure/siso.svg)](https://david-dm.org/nfroidure/siso)
 [![devDependency Status](https://david-dm.org/nfroidure/siso/dev-status.svg)](https://david-dm.org/nfroidure/siso#info=devDependencies)
-[![Coverage Status](https://coveralls.io/repos/nfroidure/siso/badge.svg?branch=master)](https://coveralls.io/r/nfroidure/siso?branch=master)
-[![Code Climate](https://codeclimate.com/github/nfroidure/siso.svg)](https://codeclimate.com/github/nfroidure/siso)
 [![Dependency Status](https://dependencyci.com/github/nfroidure/siso/badge)](https://dependencyci.com/github/nfroidure/siso)
+[![Package Quality](http://npm.packagequality.com/shield/siso.svg)](http://packagequality.com/#?package=siso)
+[![Code Climate](https://codeclimate.com/github/nfroidure/siso.svg)](https://codeclimate.com/github/nfroidure/siso)
 
 
 [//]: # (::contents:start)
@@ -156,6 +157,9 @@ siso.register([
 siso.find('v1', 'users', 'abbacacaabbacacaabbacaca');
 // ['anotherValue', { userId: 'abbacacaabbacacaabbacaca' }]
 ```
+
+# Authors
+- [Nicolas Froidure](http://insertafter.com/en/index.html)
 
 # License
 [MIT](https://github.com/nfroidure/siso/blob/master/LICENSE)
