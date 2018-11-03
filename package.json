@@ -99,7 +99,7 @@
   "dependencies": {
     "debug": "^4.1.0",
     "es6-symbol": "^3.1.1",
-    "regexp-tpl": "^2.0.0",
+    "regexp-tpl": "^2.0.1",
     "yerror": "^2.1.3"
   },
   "config": {

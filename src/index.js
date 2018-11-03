@@ -188,7 +188,14 @@ export default class Siso {
     }
     if (pathPatternNode.enum) {
       pathPatternNode = Object.assign({}, pathPatternNode, {
-        pattern: regExptpl([pathPatternNode], '{enum.#}'),
+        pattern: regExptpl(
+          [
+            {
+              enum: pathPatternNode.enum.map(v => v.toString()),
+            },
+          ],
+          '{enum.#}',
+        ),
       });
     }
 
