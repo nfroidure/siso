@@ -1,3 +1,17 @@
+# [3.0.0](https://github.com/nfroidure/siso/compare/v2.2.3...v3.0.0) (2018-11-04)
+
+
+### chore
+
+* **Dependencies:** Update dependencies ([05fd015](https://github.com/nfroidure/siso/commit/05fd015))
+
+
+### BREAKING CHANGES
+
+* **Dependencies:** Drops support for NodeJS < 8
+
+
+
 ## [2.2.3](https://github.com/nfroidure/siso/compare/v2.2.2...v2.2.3) (2018-11-03)
 
 
