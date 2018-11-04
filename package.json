@@ -4,7 +4,7 @@
   "description": "siso is a routing utility allowing to map a path to a value",
   "main": "dist/index.js",
   "engines": {
-    "node": ">=6.9.5"
+    "node": ">=8.12.0"
   },
   "metapak": {
     "data": {
@@ -14,7 +14,7 @@
         "dist"
       ],
       "bundleFiles": [
-        "'dist/**/*.js'"
+        "dist/**/*.js"
       ]
     },
     "configs": [
@@ -30,7 +30,7 @@
     ]
   },
   "files": [
-    "'dist/**/*.js'",
+    "dist/**/*.js",
     "LICENSE",
     "README.md",
     "CHANGELOG.md"
@@ -92,7 +92,7 @@
     "jsarch": "^1.3.0",
     "jsdoc-to-markdown": "^4.0.1",
     "metapak": "^2.0.0",
-    "metapak-nfroidure": "8.3.1",
+    "metapak-nfroidure": "9.0.1",
     "prettier": "^1.14.3",
     "sinon": "^6.3.3"
   },
