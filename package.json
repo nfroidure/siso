@@ -92,7 +92,7 @@
     "jsarch": "^2.0.0",
     "jsdoc-to-markdown": "^4.0.1",
     "metapak": "^2.0.0",
-    "metapak-nfroidure": "9.2.0",
+    "metapak-nfroidure": "9.3.0",
     "prettier": "^1.15.3",
     "sinon": "^7.2.2"
   },
