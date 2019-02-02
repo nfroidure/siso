@@ -1,3 +1,12 @@
+## [3.1.1](https://github.com/nfroidure/siso/compare/v3.1.0...v3.1.1) (2019-02-02)
+
+
+### Bug Fixes
+
+* **Build:** Fix package-lock desync ([e674662](https://github.com/nfroidure/siso/commit/e674662))
+
+
+
 # [3.1.0](https://github.com/nfroidure/siso/compare/v3.0.2...v3.1.0) (2019-02-02)
 
 
