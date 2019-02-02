@@ -1,3 +1,12 @@
+# [3.1.0](https://github.com/nfroidure/siso/compare/v3.0.2...v3.1.0) (2019-02-02)
+
+
+### Features
+
+* **Types:** Add types declarations ([6f7915c](https://github.com/nfroidure/siso/commit/6f7915c))
+
+
+
 ## [3.0.2](https://github.com/nfroidure/siso/compare/v3.0.1...v3.0.2) (2019-02-02)
 
 
