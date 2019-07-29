@@ -1,4 +1,3 @@
-/* eslint node/no-unsupported-features:0 */
 import Siso from './index';
 import assert from 'assert';
 

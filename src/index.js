@@ -1,5 +1,3 @@
-/* eslint node/no-unsupported-features:0 */
-
 import YError from 'yerror';
 import initDebug from 'debug';
 import regExptpl from 'regexp-tpl';

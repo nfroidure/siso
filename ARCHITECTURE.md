@@ -36,7 +36,7 @@ You may wonder why there is no mention of HTTP methods.
  reason behind that is to KISS. This is an edge case in APIs
  so i do not want it to slow down the router matching system.
 
-[See in context](./src/index.js#L14-L43)
+[See in context](./src/index.js#L12-L41)
 
 
 
@@ -46,7 +46,7 @@ To optimize the search, the basic workflow is:
 - find the root map with the given nodes lengths
 - recursively find in the child maps for each nodes
 
-[See in context](./src/index.js#L82-L87)
+[See in context](./src/index.js#L80-L85)
 
 
 
@@ -57,7 +57,7 @@ Routers nodes are indexed by their number of nodes
  comparison/regexp matching as the distribution of the
  paths lengths.
 
-[See in context](./src/index.js#L95-L101)
+[See in context](./src/index.js#L93-L99)
 
 
 
@@ -77,7 +77,7 @@ The reason why Symbols aren't used is their poor support
  but it will be done once possible:
  https://github.com/nfroidure/siso/issues/12
 
-[See in context](./src/index.js#L110-L126)
+[See in context](./src/index.js#L108-L124)
 
 
 
@@ -91,7 +91,7 @@ I choosen to allow no implicit wildcard an instead require
  while designing REST APIs. Mot of the time you know what
  your node will contain and filtering it is the best option.
 
-[See in context](./src/index.js#L176-L185)
+[See in context](./src/index.js#L174-L183)
 
 
 
@@ -100,5 +100,5 @@ I choosen to allow no implicit wildcard an instead require
 To optimize nodes search, the basic workflow is:
 - find a map with nodes lengths
 
-[See in context](./src/index.js#L256-L261)
+[See in context](./src/index.js#L254-L259)
 
