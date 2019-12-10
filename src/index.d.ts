@@ -1,4 +1,4 @@
-type SisoValue = any;
+type SisoValue = unknown;
 type SisoParamValue = string | number | boolean;
 type SisoPattern = {
   name: string;
@@ -9,7 +9,7 @@ type SisoPattern = {
 type SisoNode = string;
 type SisoParameter = SisoNode | SisoPattern;
 
-declare class Siso<V = SisoValue> {
+declare class Siso<V = SisoValue, P = SisoParamValue> {
   constructor();
   register(pathPatternNodes: SisoParameter[], value: V): void;
   find(
@@ -17,7 +17,7 @@ declare class Siso<V = SisoValue> {
   ): [
     V,
     {
-      [name: string]: SisoParamValue;
+      [name: string]: P;
     }
   ];
 }
