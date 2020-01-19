@@ -1,3 +1,7 @@
+# [3.2.0](https://github.com/nfroidure/siso/compare/v3.1.2...v3.2.0) (2020-01-19)
+
+
+
 ## [3.1.2](https://github.com/nfroidure/siso/compare/v3.1.1...v3.1.2) (2019-12-10)
 
 
