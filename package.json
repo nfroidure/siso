@@ -15,8 +15,8 @@
         "dist"
       ],
       "bundleFiles": [
-        "src/index.d.ts",
-        "dist/**/*.js"
+        "dist",
+        "src"
       ]
     },
     "configs": [
@@ -32,8 +32,8 @@
     ]
   },
   "files": [
-    "src/index.d.ts",
-    "dist/**/*.js",
+    "dist",
+    "src",
     "LICENSE",
     "README.md",
     "CHANGELOG.md"
@@ -42,7 +42,7 @@
     "architecture": "jsarch src/*.js > ARCHITECTURE.md && git add ARCHITECTURE.md",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "cli": "env NODE_ENV=${NODE_ENV:-cli}",
-    "compile": "babel src --out-dir=dist",
+    "compile": "babel src --out-dir=dist --source-maps=true",
     "cover": "npm run jest -- --coverage",
     "coveralls": "npm run cover && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "cz": "env NODE_ENV=${NODE_ENV:-cli} git cz",
@@ -50,10 +50,10 @@
     "jest": "NODE_ENV=test jest",
     "lint": "eslint src/*.js",
     "metapak": "metapak",
-    "precz": "npm t && npm run lint && npm run doc && npm run architecture && npm run metapak -- -s",
+    "precz": "npm run compile && npm t && npm run lint && npm run doc && npm run architecture && npm run metapak -- -s",
     "prepublish": "npm run compile",
     "prettier": "prettier --write src/*.js",
-    "preversion": "npm t && npm run lint && npm run compile && npm run doc && npm run architecture && npm run metapak -- -s",
+    "preversion": "npm run compile && npm t && npm run lint && npm run doc && npm run architecture && npm run metapak -- -s",
     "test": "npm run jest",
     "version": "npm run changelog"
   },
@@ -77,25 +77,25 @@
   },
   "homepage": "https://github.com/nfroidure/siso#readme",
   "devDependencies": {
-    "@babel/cli": "^7.7.4",
-    "@babel/core": "^7.7.4",
-    "@babel/plugin-proposal-object-rest-spread": "^7.7.4",
-    "@babel/preset-env": "^7.7.4",
-    "@babel/register": "^7.7.4",
+    "@babel/cli": "^7.8.3",
+    "@babel/core": "^7.8.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "@babel/register": "^7.8.3",
     "babel-eslint": "^10.0.3",
     "commitizen": "^4.0.3",
-    "conventional-changelog-cli": "^2.0.28",
+    "conventional-changelog-cli": "^2.0.31",
     "coveralls": "^3.0.9",
     "cz-conventional-changelog": "^3.0.2",
-    "eslint": "^6.7.1",
-    "eslint-plugin-prettier": "^3.1.1",
+    "eslint": "^6.8.0",
+    "eslint-plugin-prettier": "^3.1.2",
     "jest": "^24.9.0",
     "jsarch": "^2.0.3",
     "jsdoc-to-markdown": "^5.0.3",
     "metapak": "^3.1.2",
-    "metapak-nfroidure": "9.7.4",
+    "metapak-nfroidure": "9.8.1",
     "prettier": "^1.19.1",
-    "sinon": "^7.2.2"
+    "sinon": "^8.1.0"
   },
   "dependencies": {
     "debug": "^4.1.1",
