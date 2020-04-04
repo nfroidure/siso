@@ -2,10 +2,11 @@
   "name": "siso",
   "version": "3.2.0",
   "description": "siso is a routing utility allowing to map a path to a value",
-  "main": "dist/index.js",
+  "main": "dist/index",
+  "module": "dist/index.mjs",
   "types": "src/index.d.ts",
   "engines": {
-    "node": ">=8.12.0"
+    "node": ">=10.19.0"
   },
   "metapak": {
     "data": {
@@ -42,7 +43,9 @@
     "architecture": "jsarch src/*.js > ARCHITECTURE.md && git add ARCHITECTURE.md",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s && git add CHANGELOG.md",
     "cli": "env NODE_ENV=${NODE_ENV:-cli}",
-    "compile": "babel src --out-dir=dist --source-maps=true",
+    "compile": "rimraf -f 'dist' && npm run compile:cjs && npm run compile:mjs",
+    "compile:cjs": "babel --env-name=cjs --out-dir=dist --source-maps=true src",
+    "compile:mjs": "babel --env-name=mjs --out-file-extension=.mjs --out-dir=dist --source-maps=true src",
     "cover": "npm run jest -- --coverage",
     "coveralls": "npm run cover && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage",
     "cz": "env NODE_ENV=${NODE_ENV:-cli} git cz",
@@ -77,24 +80,24 @@
   },
   "homepage": "https://github.com/nfroidure/siso#readme",
   "devDependencies": {
-    "@babel/cli": "^7.8.3",
-    "@babel/core": "^7.8.3",
-    "@babel/plugin-proposal-object-rest-spread": "^7.8.3",
-    "@babel/preset-env": "^7.8.3",
-    "@babel/register": "^7.8.3",
-    "babel-eslint": "^10.0.3",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.9.0",
+    "@babel/preset-env": "^7.9.0",
+    "@babel/register": "^7.9.0",
+    "babel-eslint": "^10.1.0",
     "commitizen": "^4.0.3",
     "conventional-changelog-cli": "^2.0.31",
-    "coveralls": "^3.0.9",
-    "cz-conventional-changelog": "^3.0.2",
+    "coveralls": "^3.0.11",
+    "cz-conventional-changelog": "^3.1.0",
     "eslint": "^6.8.0",
     "eslint-plugin-prettier": "^3.1.2",
-    "jest": "^24.9.0",
+    "jest": "^25.2.4",
     "jsarch": "^2.0.3",
     "jsdoc-to-markdown": "^5.0.3",
-    "metapak": "^3.1.2",
-    "metapak-nfroidure": "9.8.1",
-    "prettier": "^1.19.1",
+    "metapak": "^3.1.8",
+    "metapak-nfroidure": "10.1.2",
+    "prettier": "^2.0.2",
     "sinon": "^8.1.0"
   },
   "dependencies": {
@@ -140,21 +143,6 @@
       "<rootDir>/src"
     ]
   },
-  "babel": {
-    "presets": [
-      [
-        "@babel/env",
-        {
-          "targets": {
-            "node": "8.12.0"
-          }
-        }
-      ]
-    ],
-    "plugins": [
-      "@babel/plugin-proposal-object-rest-spread"
-    ]
-  },
   "contributors": [],
   "eslintConfig": {
     "extends": "eslint:recommended",
@@ -182,5 +170,51 @@
     "singleQuote": true,
     "trailingComma": "all",
     "proseWrap": "always"
+  },
+  "babel": {
+    "plugins": [
+      "@babel/plugin-proposal-object-rest-spread"
+    ],
+    "presets": [
+      [
+        "@babel/env",
+        {
+          "targets": {
+            "node": "10.19.0"
+          }
+        }
+      ]
+    ],
+    "env": {
+      "cjs": {
+        "presets": [
+          [
+            "@babel/env",
+            {
+              "targets": {
+                "node": "10"
+              },
+              "modules": "commonjs"
+            }
+          ]
+        ],
+        "comments": true
+      },
+      "mjs": {
+        "presets": [
+          [
+            "@babel/env",
+            {
+              "targets": {
+                "node": "12"
+              },
+              "modules": "false"
+            }
+          ]
+        ],
+        "comments": false
+      }
+    },
+    "sourceMaps": true
   }
 }

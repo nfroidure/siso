@@ -189,7 +189,7 @@ export default class Siso {
         pattern: regExptpl(
           [
             {
-              enum: pathPatternNode.enum.map(v => v.toString()),
+              enum: pathPatternNode.enum.map((v) => v.toString()),
             },
           ],
           '{enum.#}',
@@ -282,7 +282,7 @@ export default class Siso {
         return [candidateValue, parameters];
       }
       debug('No value found on the node basis:', pathNode);
-      (currentMap.get(PARAMETER_NODES) || []).forEach(parameter => {
+      (currentMap.get(PARAMETER_NODES) || []).forEach((parameter) => {
         debug('Testing node against parameter:', pathNode, parameter);
         if (parameter.pattern.test(pathNode)) {
           candidateValue = currentMap.get(
