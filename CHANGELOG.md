@@ -1,3 +1,12 @@
+# [4.0.0](https://github.com/nfroidure/siso/compare/v3.2.0...v4.0.0) (2020-04-04)
+
+
+### Features
+
+* **esm:** add support for esm ([acf979d](https://github.com/nfroidure/siso/commit/acf979ddf34d6ad4e7ae8f6932988a9b0587fd65))
+
+
+
 # [3.2.0](https://github.com/nfroidure/siso/compare/v3.1.2...v3.2.0) (2020-01-19)
 
 
