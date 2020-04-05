@@ -3,7 +3,6 @@ import initDebug from 'debug';
 import regExptpl from 'regexp-tpl';
 
 const debug = initDebug('siso');
-const Symbol = require('es6-symbol');
 
 const PARAMETER_NODES = Symbol('PARAMETER_NODES');
 const PARAMETER_KEY_PREFIX = '__//--##,,';
@@ -116,11 +115,6 @@ export default class Siso {
      parameters needs some regular expression mathing work,
      we cannot just retrieve it by key. They are then put in
      a set with the `PARAMETER_NODES` special property.
-
-    The reason why Symbols aren't used is their poor support
-     but it will be done once possible:
-     https://github.com/nfroidure/siso/issues/12
-
     */
     pathPatternNodes.forEach((pathPatternNode, index) => {
       const isLastNode = index + 1 === nodesLength;
