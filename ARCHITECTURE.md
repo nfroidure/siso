@@ -5,9 +5,17 @@
 [//]: # ( )
 # Architecture Notes
 
+## Summary
+
+1. [Design Choices](#1-design-choices)
+2. [Indexing with Maps in Maps](#2-indexing-with-maps-in-maps)
+   1. [Indexing by Nodes Length](#21-indexing-by-nodes-length)
+   2. [Indexing each Nodes](#22-indexing-each-nodes)
+   3. [Enum or pattern](#23-enum-or-pattern)
+3. [Search workflow](#3-search-workflow)
 
 
-## Design Choices
+## 1. Design Choices
 
 I could have created a higher order function but I find
  out easier to add routes with a method instead of
@@ -40,7 +48,7 @@ You may wonder why there is no mention of HTTP methods.
 
 
 
-## Indexing with Maps in Maps
+## 2. Indexing with Maps in Maps
 
 To optimize the search, the basic workflow is:
 - find the root map with the given nodes lengths
@@ -50,7 +58,7 @@ To optimize the search, the basic workflow is:
 
 
 
-### Indexing by Nodes Length
+### 2.1. Indexing by Nodes Length
 
 Routers nodes are indexed by their number of nodes
  for better performances. It saves as much string
@@ -61,7 +69,7 @@ Routers nodes are indexed by their number of nodes
 
 
 
-### Indexing each Nodes
+### 2.2. Indexing each Nodes
 
 A node can be a string, if so, we just use it as a key.
  Otherwise, it is a parameter with some regular expressions
@@ -77,7 +85,7 @@ To ensure parameters unicity we maintain a map of every
 
 
 
-### Enum or pattern
+### 2.3. Enum or pattern
 
 Declaring an `enum` or a `pattern` property is mandatory
  to properly registering a node.
@@ -91,7 +99,7 @@ I choosen to allow no implicit wildcard an instead require
 
 
 
-## Search workflow
+## 3. Search workflow
 
 To optimize nodes search, the basic workflow is:
 - find a map with nodes lengths

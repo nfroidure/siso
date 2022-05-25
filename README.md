@@ -10,11 +10,6 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nfroidure/siso/blob/master/LICENSE)
 [![Build status](https://travis-ci.com/nfroidure/siso.svg?branch=master)](https://travis-ci.com/github/nfroidure/siso)
 [![Coverage Status](https://coveralls.io/repos/github/nfroidure/siso/badge.svg?branch=master)](https://coveralls.io/github/nfroidure/siso?branch=master)
-[![NPM version](https://badge.fury.io/js/siso.svg)](https://npmjs.org/package/siso)
-[![Dependency Status](https://david-dm.org/nfroidure/siso.svg)](https://david-dm.org/nfroidure/siso)
-[![devDependency Status](https://david-dm.org/nfroidure/siso/dev-status.svg)](https://david-dm.org/nfroidure/siso#info=devDependencies)
-[![Package Quality](https://npm.packagequality.com/shield/siso.svg)](https://packagequality.com/#?package=siso)
-[![Code Climate](https://codeclimate.com/github/nfroidure/siso.svg)](https://codeclimate.com/github/nfroidure/siso)
 
 
 [//]: # (::contents:start)
