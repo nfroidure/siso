@@ -1,3 +1,7 @@
+## [4.0.5](https://github.com/nfroidure/siso/compare/v4.0.4...v4.0.5) (2022-05-25)
+
+
+
 ## [4.0.4](https://github.com/nfroidure/siso/compare/v4.0.3...v4.0.4) (2021-04-09)
 
 
