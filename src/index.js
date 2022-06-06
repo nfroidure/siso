@@ -1,4 +1,4 @@
-import YError from 'yerror';
+import { YError } from 'yerror';
 import initDebug from 'debug';
 import regExptpl from 'regexp-tpl';
 
@@ -39,13 +39,17 @@ You may wonder why there is no mention of HTTP methods.
 
 */
 
-export default class Siso {
+/**
+ * Siso
+ * @class
+ */
+class Siso {
   /**
    * Create a new Siso instance
    * @return {Siso}     The Siso instance
    * @example
    *
-   * import Siso from 'siso';
+   * import { Siso } from 'siso';
    *
    * const siso = new Siso();
    */
@@ -61,7 +65,7 @@ export default class Siso {
    * @return {void}
    * @example
    *
-   * import Siso from 'siso';
+   * import { Siso } from 'siso';
    *
    * const siso = new Siso();
    *
@@ -231,7 +235,7 @@ export default class Siso {
    * @return {void}
    * @example
    *
-   * import Siso from 'siso';
+   * import { Siso } from 'siso';
    *
    * const siso = new Siso();
    *
@@ -332,3 +336,6 @@ function _parseBoolean(str) {
   }
   throw new YError('E_BAD_BOOLEAN', str);
 }
+
+export { Siso };
+export default Siso;

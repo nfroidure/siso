@@ -12,14 +12,13 @@ type SisoParameter = SisoNode | SisoPattern;
 declare class Siso<V = SisoValue, P = SisoParamValue> {
   constructor();
   register(pathPatternNodes: SisoParameter[], value: V): void;
-  find(
-    pathNodes: SisoNode[],
-  ): [
+  find(pathNodes: SisoNode[]): [
     V,
     {
       [name: string]: P;
-    }
+    },
   ];
 }
 
+export { Siso };
 export default Siso;

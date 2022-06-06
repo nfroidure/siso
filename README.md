@@ -8,7 +8,6 @@
 > siso is a routing utility allowing to map a path to a value
 
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/nfroidure/siso/blob/master/LICENSE)
-[![Build status](https://travis-ci.com/nfroidure/siso.svg?branch=master)](https://travis-ci.com/github/nfroidure/siso)
 [![Coverage Status](https://coveralls.io/repos/github/nfroidure/siso/badge.svg?branch=master)](https://coveralls.io/github/nfroidure/siso?branch=master)
 
 
@@ -87,23 +86,36 @@ My opinion is that it is a bad thing. Every route should
 [//]: # (::contents:end)
 
 # API
-## Functions
+<a name="Siso"></a>
 
-<dl>
-<dt><a href="#register">register(pathPatternNodes, value)</a> ⇒ <code>void</code></dt>
-<dd><p>Register a value for a pattern path</p>
-</dd>
-<dt><a href="#find">find(pathNodes)</a> ⇒ <code>void</code></dt>
-<dd><p>Find the value for the given path</p>
-</dd>
-</dl>
+## Siso
+Siso
 
-<a name="register"></a>
+**Kind**: global class  
 
-## register(pathPatternNodes, value) ⇒ <code>void</code>
+* [Siso](#Siso)
+    * [new Siso()](#new_Siso_new)
+    * [.register(pathPatternNodes, value)](#Siso+register) ⇒ <code>void</code>
+    * [.find(pathNodes)](#Siso+find) ⇒ <code>void</code>
+
+<a name="new_Siso_new"></a>
+
+### new Siso()
+Create a new Siso instance
+
+**Returns**: [<code>Siso</code>](#Siso) - The Siso instance  
+**Example**  
+```js
+import { Siso } from 'siso';
+
+const siso = new Siso();
+```
+<a name="Siso+register"></a>
+
+### siso.register(pathPatternNodes, value) ⇒ <code>void</code>
 Register a value for a pattern path
 
-**Kind**: global function  
+**Kind**: instance method of [<code>Siso</code>](#Siso)  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -112,7 +124,7 @@ Register a value for a pattern path
 
 **Example**  
 ```js
-import Siso from 'siso';
+import { Siso } from 'siso';
 
 const siso = new Siso();
 
@@ -126,12 +138,12 @@ siso.register([
   { name: 'id', pattern: /[a-f0-9]{24}/, type: 'string' },
 ], 'user.details');
 ```
-<a name="find"></a>
+<a name="Siso+find"></a>
 
-## find(pathNodes) ⇒ <code>void</code>
+### siso.find(pathNodes) ⇒ <code>void</code>
 Find the value for the given path
 
-**Kind**: global function  
+**Kind**: instance method of [<code>Siso</code>](#Siso)  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -139,7 +151,7 @@ Find the value for the given path
 
 **Example**  
 ```js
-import Siso from 'siso';
+import { Siso } from 'siso';
 
 const siso = new Siso();
 
