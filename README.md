@@ -33,7 +33,7 @@ The `siso` concept is pretty simple. You associate paths
  paths so that you can use it for any routing concern.
 
 ```js
-import Siso from siso;
+import { Siso } from siso;
 
 const siso = new Siso();
 
