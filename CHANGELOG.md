@@ -1,3 +1,12 @@
+# [4.1.0](https://github.com/nfroidure/siso/compare/v4.0.5...v4.1.0) (2022-06-06)
+
+
+### Features
+
+* **esm:** ensure ESM compatibility ([1b02767](https://github.com/nfroidure/siso/commit/1b027675de40f3cb6697acf41ecd483e7c16fc9a))
+
+
+
 ## [4.0.5](https://github.com/nfroidure/siso/compare/v4.0.4...v4.0.5) (2022-05-25)
 
 

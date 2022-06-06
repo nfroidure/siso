@@ -54,7 +54,7 @@ To optimize the search, the basic workflow is:
 - find the root map with the given nodes lengths
 - recursively find in the child maps for each nodes
 
-[See in context](./src/index.js#L79-L84)
+[See in context](./src/index.js#L83-L88)
 
 
 
@@ -65,7 +65,7 @@ Routers nodes are indexed by their number of nodes
  comparison/regexp matching as the distribution of the
  paths lengths.
 
-[See in context](./src/index.js#L92-L98)
+[See in context](./src/index.js#L96-L102)
 
 
 
@@ -81,7 +81,7 @@ To ensure parameters unicity we maintain a map of every
  we cannot just retrieve it by key. They are then put in
  a set with the `PARAMETER_NODES` special property.
 
-[See in context](./src/index.js#L107-L118)
+[See in context](./src/index.js#L111-L122)
 
 
 
@@ -95,7 +95,7 @@ I choosen to allow no implicit wildcard an instead require
  while designing REST APIs. Mot of the time you know what
  your node will contain and filtering it is the best option.
 
-[See in context](./src/index.js#L168-L177)
+[See in context](./src/index.js#L172-L181)
 
 
 
@@ -104,5 +104,5 @@ I choosen to allow no implicit wildcard an instead require
 To optimize nodes search, the basic workflow is:
 - find a map with nodes lengths
 
-[See in context](./src/index.js#L248-L253)
+[See in context](./src/index.js#L252-L257)
 
