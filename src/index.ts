@@ -2,6 +2,35 @@ import { YError } from 'yerror';
 import initDebug from 'debug';
 import regExptpl from 'regexp-tpl';
 
+type SisoValue = unknown;
+type SisoParamValue = string | number | boolean;
+type SisoPattern = {
+  name: string;
+  type: 'string' | 'number' | 'boolean';
+} & (
+  | {
+      pattern: string;
+    }
+  | {
+      enum: SisoParamValue[];
+    }
+);
+type SisoNode = string;
+type SisoParameter = SisoNode | SisoPattern;
+type SisoParametersValues<P extends SisoParamValue> = {
+  [name: string]: P;
+};
+type SisoResult<V extends SisoValue, P extends SisoParamValue> = [
+  V | undefined,
+  SisoParametersValues<P>,
+];
+type SisoInternalPattern = SisoPattern & { __computedPattern: RegExp };
+type SisoParamSet = Set<SisoInternalPattern>;
+type SisoMap<V extends SisoValue> = Map<
+  string | typeof PARAMETER_NODES,
+  SisoMap<V> | V | SisoParamSet
+>;
+
 const debug = initDebug('siso');
 
 const PARAMETER_NODES = Symbol('PARAMETER_NODES');
@@ -43,7 +72,12 @@ You may wonder why there is no mention of HTTP methods.
  * Siso
  * @class
  */
-class Siso {
+class Siso<
+  V extends SisoValue = SisoValue,
+  P extends SisoParamValue = SisoParamValue,
+> {
+  private _nodesLengthMap: Map<number, SisoMap<V>>;
+  private _parameters: Map<string, SisoInternalPattern>;
   /**
    * Create a new Siso instance
    * @return {Siso}     The Siso instance
@@ -79,7 +113,7 @@ class Siso {
    *   { name: 'id', pattern: /[a-f0-9]{24}/, type: 'string' },
    * ], 'user.details');
    */
-  register(pathPatternNodes, value) {
+  register(pathPatternNodes: SisoParameter[], value: V): void {
     /* Architecture Note #2: Indexing with Maps in Maps
 
     To optimize the search, the basic workflow is:
@@ -127,7 +161,7 @@ class Siso {
       if ('string' === typeof pathPatternNode) {
         debug('Registering a text node:', pathPatternNode);
         nextMap = this._registerTextNode(
-          currentMap,
+          currentMap as SisoMap<V>,
           isLastNode,
           pathPatternNode,
           value,
@@ -135,7 +169,7 @@ class Siso {
       } else {
         debug('Registering a parameter node:', pathPatternNode);
         nextMap = this._registerParameterNode(
-          currentMap,
+          currentMap as SisoMap<V>,
           isLastNode,
           pathPatternNode,
           value,
@@ -148,26 +182,36 @@ class Siso {
     });
   }
 
-  // disabling the '_registerTextNode' eslint rule for consistency with _registerParameterNode
-  _registerTextNode(currentMap, isLastNode, pathPatternNode, value) {
-    // eslint-disable-line
-    let nextMap;
+  _registerTextNode(
+    currentMap: SisoMap<V>,
+    isLastNode: boolean,
+    pathPatternNode: SisoNode,
+    value: V,
+  ): SisoMap<V> | undefined {
+    let nextMap: SisoMap<V> | undefined = undefined;
 
     if (!isLastNode) {
-      nextMap = currentMap.get(pathPatternNode) || new Map();
+      nextMap = (currentMap.get(pathPatternNode) || new Map()) as SisoMap<V>;
       if (!(nextMap instanceof Map)) {
-        throw new YError('E_VALUE_OVERRIDE', pathPatternNode.name);
+        throw new YError('E_VALUE_OVERRIDE', pathPatternNode, nextMap);
       }
     } else if (currentMap.get(pathPatternNode)) {
       throw new YError('E_NODE_OVERRIDE', pathPatternNode);
     }
-    currentMap.set(pathPatternNode, isLastNode ? value : nextMap);
+    currentMap.set(
+      pathPatternNode,
+      isLastNode ? value : (nextMap as SisoMap<V>),
+    );
     return nextMap;
   }
 
-  _registerParameterNode(currentMap, isLastNode, pathPatternNode, value) {
-    let nextMap;
-    let paramsSet;
+  _registerParameterNode(
+    currentMap: SisoMap<V>,
+    isLastNode: boolean,
+    pathPatternNode: SisoPattern,
+    value: V,
+  ): SisoMap<V> | undefined {
+    let nextMap: SisoMap<V> | undefined;
 
     /* Architecture Note #2.3: Enum or pattern
 
@@ -179,52 +223,62 @@ class Siso {
      while designing REST APIs. Mot of the time you know what
      your node will contain and filtering it is the best option.
     */
-    if (pathPatternNode.enum && pathPatternNode.pattern) {
-      throw new YError('E_BAD_PARAMETER', pathPatternNode.name);
-    }
-    if (pathPatternNode.enum) {
-      pathPatternNode = Object.assign({}, pathPatternNode, {
-        pattern: regExptpl(
-          [
-            {
-              enum: pathPatternNode.enum.map((v) => v.toString()),
-            },
-          ],
-          '{enum.#}',
-        ),
-      });
+    if ('enum' in pathPatternNode && 'pattern' in pathPatternNode) {
+      throw new YError(
+        'E_BAD_PARAMETER',
+        (pathPatternNode as SisoPattern).name,
+      );
     }
 
-    if ('string' === typeof pathPatternNode.pattern) {
-      pathPatternNode = Object.assign({}, pathPatternNode, {
-        pattern: new RegExp(pathPatternNode.pattern),
-      });
-    }
+    const computedPattern =
+      'enum' in pathPatternNode
+        ? regExptpl(
+            [
+              {
+                enum: pathPatternNode.enum.map((v) => v.toString()),
+              },
+            ],
+            '{enum.#}',
+          )
+        : new RegExp(pathPatternNode.pattern);
 
     if (
-      this._parameters.get(pathPatternNode.name) &&
-      this._parameters.get(pathPatternNode.name).pattern.toString() !==
-        pathPatternNode.pattern.toString()
+      this._parameters.has(pathPatternNode.name) &&
+      (
+        this._parameters.get(pathPatternNode.name) as SisoInternalPattern
+      ).__computedPattern.toString() !== computedPattern.toString()
     ) {
       throw new YError('E_PARAM_OVERRIDE', pathPatternNode.name);
     }
+
+    if (
+      isLastNode &&
+      currentMap.get(PARAMETER_KEY_PREFIX + pathPatternNode.name)
+    ) {
+      throw new YError('E_PARAM_OVERRIDE', pathPatternNode.name);
+    }
+
     if (!isLastNode) {
-      nextMap =
-        currentMap.get(PARAMETER_KEY_PREFIX + pathPatternNode.name) ||
-        new Map();
+      nextMap = (currentMap.get(PARAMETER_KEY_PREFIX + pathPatternNode.name) ||
+        new Map()) as SisoMap<V>;
       if (!(nextMap instanceof Map)) {
         throw new YError('E_VALUE_OVERRIDE', pathPatternNode.name);
       }
-    } else if (currentMap.get(PARAMETER_KEY_PREFIX + pathPatternNode.name)) {
-      throw new YError('E_PARAM_OVERRIDE', pathPatternNode.name);
     }
-    paramsSet = currentMap.get(PARAMETER_NODES) || new Set();
-    paramsSet.add(pathPatternNode);
+
+    const paramsSet = (currentMap.get(PARAMETER_NODES) ||
+      new Set()) as SisoParamSet;
+    const internalPatternNode = {
+      ...pathPatternNode,
+      __computedPattern: computedPattern,
+    };
+
+    paramsSet.add(internalPatternNode);
     currentMap.set(PARAMETER_NODES, paramsSet);
-    this._parameters.set(pathPatternNode.name, pathPatternNode);
+    this._parameters.set(pathPatternNode.name, internalPatternNode);
     currentMap.set(
       PARAMETER_KEY_PREFIX + pathPatternNode.name,
-      isLastNode ? value : nextMap,
+      isLastNode ? value : (nextMap as SisoMap<V>),
     );
     return nextMap;
   }
@@ -245,59 +299,88 @@ class Siso {
    *   { name: 'userId', pattern: /[a-f0-9]{24}/, type: 'string' },
    * ], 'anotherValue');
    *
-   * siso.find('v1', 'users', 'abbacacaabbacacaabbacaca');
+   * siso.find(['v1', 'users', 'abbacacaabbacacaabbacaca']);
    * // ['anotherValue', { userId: 'abbacacaabbacacaabbacaca' }]
    */
-  find(pathNodes) {
+  find(pathNodes: SisoNode[]): SisoResult<V, P> {
     /* Architecture Note #3: Search workflow
 
     To optimize nodes search, the basic workflow is:
     - find a map with nodes lengths
-
+    - walk through the tree to find a value
     */
     const nodesLength = pathNodes.length;
-    const result = [this._nodesLengthMap.get(nodesLength), {}];
+    const rootMap = this._nodesLengthMap.get(nodesLength);
 
     debug('Testing a new path:', pathNodes);
 
-    if ('undefined' === typeof result[0]) {
+    if ('undefined' === typeof rootMap) {
       debug('No path pattern of this length:', nodesLength);
-      return result;
+      return [undefined, {}];
     }
 
-    return pathNodes.reduce(([currentMap, parameters], pathNode) => {
-      let candidateValue;
+    const pathNodesLeft = [...pathNodes];
+    let parameters: SisoParametersValues<P> = {};
+    let currentMap: SisoMap<V> = rootMap;
+    let candidateValue: V | SisoMap<V> | undefined;
+
+    while (pathNodesLeft.length) {
+      const pathNode = pathNodesLeft.shift() as string;
 
       debug('Testing node:', pathNode);
-      if ('undefined' === typeof currentMap) {
-        debug('No map found', pathNode);
-        return [currentMap, parameters];
+
+      candidateValue = currentMap.get(pathNode) as V | SisoMap<V> | undefined;
+
+      if (typeof candidateValue !== 'undefined') {
+        debug('Value found on a node basis:', pathNode);
+      } else {
+        debug('No value found on the node basis:', pathNode);
+        const patterns = (currentMap.get(PARAMETER_NODES) ||
+          []) as SisoInternalPattern[];
+
+        for (const pattern of patterns) {
+          debug('Testing node against parameter:', pathNode, pattern);
+          if (pattern.__computedPattern.test(pathNode)) {
+            candidateValue = currentMap.get(
+              PARAMETER_KEY_PREFIX + pattern.name,
+            ) as V | SisoMap<V> | undefined;
+            parameters = _assignParameterPart<P>(pattern, parameters, pathNode);
+          }
+        }
+
+        if (typeof candidateValue !== 'undefined') {
+          debug('Value found on a paramater basis:', pathNode);
+        }
       }
 
-      candidateValue = currentMap.get(pathNode);
-      if (candidateValue) {
-        debug('Value found on a node basis:', pathNode);
-        return [candidateValue, parameters];
+      if ('undefined' === typeof candidateValue) {
+        debug('No map found', pathNode);
+        return [undefined, parameters];
       }
-      debug('No value found on the node basis:', pathNode);
-      (currentMap.get(PARAMETER_NODES) || []).forEach((parameter) => {
-        debug('Testing node against parameter:', pathNode, parameter);
-        if (parameter.pattern.test(pathNode)) {
-          candidateValue = currentMap.get(
-            PARAMETER_KEY_PREFIX + parameter.name,
-          );
-          parameters = _assignParameterPart(parameter, parameters, pathNode);
+
+      if (pathNodesLeft.length) {
+        if (candidateValue instanceof Map) {
+          currentMap = candidateValue;
+        } else {
+          debug('Found a value instead of a map:', pathNode);
+          return [undefined, parameters];
         }
-      });
-      if (candidateValue) {
-        debug('Value found on a paramater basis:', pathNode);
       }
+    }
+    if (candidateValue instanceof Map) {
+      debug('Found a map instead of a value!', candidateValue);
+      return [undefined, parameters];
+    } else {
       return [candidateValue, parameters];
-    }, result);
+    }
   }
 }
 
-function _assignParameterPart(paramDefinition, parameters, pathNode) {
+function _assignParameterPart<P extends SisoParamValue>(
+  paramDefinition: SisoPattern,
+  parameters: SisoParametersValues<P>,
+  pathNode: string,
+): SisoParametersValues<P> {
   // Supporting only a subset of JSON schema core
   // http://json-schema.org/latest/json-schema-core.html#rfc.section.4.2
   const value =
@@ -314,12 +397,12 @@ function _assignParameterPart(paramDefinition, parameters, pathNode) {
             paramDefinition.type,
           );
         })();
-  parameters[paramDefinition.name] = value;
+  parameters[paramDefinition.name] = value as P;
   return parameters;
 }
 
-function _parseReentrantNumber(str) {
-  const value = parseFloat(str, BASE_10);
+function _parseReentrantNumber(str: string): number {
+  const value = parseFloat(str);
 
   if (value.toString(BASE_10) !== str) {
     throw new YError('E_NON_REENTRANT_NUMBER', str, value.toString(BASE_10));
@@ -328,7 +411,7 @@ function _parseReentrantNumber(str) {
   return value;
 }
 
-function _parseBoolean(str) {
+function _parseBoolean(str: string): boolean {
   if ('true' === str) {
     return true;
   } else if ('false' === str) {
@@ -338,4 +421,3 @@ function _parseBoolean(str) {
 }
 
 export { Siso };
-export default Siso;

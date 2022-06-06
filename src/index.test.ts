@@ -1,4 +1,4 @@
-import Siso from './index';
+import { Siso } from './index.js';
 import assert from 'assert';
 
 describe('siso', () => {
@@ -51,7 +51,7 @@ describe('siso', () => {
       const siso = new Siso();
 
       assert.throws(() => {
-        siso.register(['v1', 'users']);
+        siso.register(['v1', 'users'], undefined);
       }, /E_BAD_VALUE/);
     });
 
@@ -78,6 +78,7 @@ describe('siso', () => {
             'users',
             {
               name: 'userId',
+              type: 'number',
               pattern: '[0-9]{3}',
             },
             'thumbnail',
@@ -111,6 +112,7 @@ describe('siso', () => {
             'users',
             {
               name: 'userId',
+              type: 'string',
               pattern: '[a-f0-9]{24}',
             },
             'pictures',
@@ -143,6 +145,7 @@ describe('siso', () => {
             'users',
             {
               name: 'userId',
+              type: 'number',
               pattern: '[0-9]{2}',
             },
           ],
@@ -156,11 +159,15 @@ describe('siso', () => {
     test('should work with nothing registered', () => {
       const siso = new Siso();
 
-      assert.deepEqual(siso.find('v1'), [{}.undef, {}], 'Fail with one node');
+      assert.deepEqual(
+        siso.find(['v1']),
+        [undefined, {}],
+        'Fail with one node',
+      );
 
       assert.deepEqual(
-        siso.find('v1', 'users', '1'),
-        [{}.undef, {}],
+        siso.find(['v1', 'users', '1']),
+        [undefined, {}],
         'Fail with several nodes',
       );
     });
@@ -186,7 +193,7 @@ describe('siso', () => {
 
       assert.deepEqual(
         siso.find(['v3']),
-        [{}.undef, {}],
+        [undefined, {}],
         'Fail with non registered content',
       );
     });
@@ -212,7 +219,7 @@ describe('siso', () => {
 
       assert.deepEqual(
         siso.find(['v2', 'organizations']),
-        [{}.undef, {}],
+        [undefined, {}],
         'Fail with non registered content',
       );
     });
@@ -259,7 +266,7 @@ describe('siso', () => {
       );
       assert.deepEqual(
         siso.find(['whatdoyouwant']),
-        [{}.undef, {}],
+        [undefined, {}],
         'Fail with no match',
       );
     });
@@ -305,13 +312,13 @@ describe('siso', () => {
 
       assert.deepEqual(
         siso.find(['whatdoyouwant']),
-        [{}.undef, {}],
+        [undefined, {}],
         'Should fail with unregistered pathes',
       );
 
       assert.deepEqual(
         siso.find(['what', 'do', 'you', 'want']),
-        [{}.undef, {}],
+        [undefined, {}],
         'Should fail with unregistered pathes',
       );
 
@@ -321,13 +328,13 @@ describe('siso', () => {
           'abbacacaabbacacaabbacaca',
           'abbacacaabbacacaabbacaca',
         ]),
-        [{}.undef, {}],
+        [undefined, {}],
         'Should fail with unregistered pathes',
       );
 
       assert.deepEqual(
         siso.find(['abbacacaabbacacaabbacaca', 'id_test', 'test']),
-        [{}.undef, {}],
+        [undefined, {}],
         'Should fail with pathes begining with a registered',
       );
     });
@@ -544,7 +551,7 @@ describe('siso', () => {
         'Work with the good type in output',
       );
 
-      assert.deepEqual(siso.find(['users', '15.67']), [{}.undef, {}]);
+      assert.deepEqual(siso.find(['users', '15.67']), [undefined, {}]);
     });
 
     test('should work with boolean param', () => {

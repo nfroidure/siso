@@ -161,7 +161,7 @@ siso.register([
   { name: 'userId', pattern: /[a-f0-9]{24}/, type: 'string' },
 ], 'anotherValue');
 
-siso.find('v1', 'users', 'abbacacaabbacacaabbacaca');
+siso.find(['v1', 'users', 'abbacacaabbacacaabbacaca']);
 // ['anotherValue', { userId: 'abbacacaabbacacaabbacaca' }]
 ```
 

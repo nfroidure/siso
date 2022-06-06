@@ -44,7 +44,7 @@ You may wonder why there is no mention of HTTP methods.
  reason behind that is to KISS. This is an edge case in APIs
  so i do not want it to slow down the router matching system.
 
-[See in context](./src/index.js#L11-L40)
+[See in context](./src/index.ts#L40-L69)
 
 
 
@@ -54,7 +54,7 @@ To optimize the search, the basic workflow is:
 - find the root map with the given nodes lengths
 - recursively find in the child maps for each nodes
 
-[See in context](./src/index.js#L83-L88)
+[See in context](./src/index.ts#L117-L122)
 
 
 
@@ -65,7 +65,7 @@ Routers nodes are indexed by their number of nodes
  comparison/regexp matching as the distribution of the
  paths lengths.
 
-[See in context](./src/index.js#L96-L102)
+[See in context](./src/index.ts#L130-L136)
 
 
 
@@ -81,7 +81,7 @@ To ensure parameters unicity we maintain a map of every
  we cannot just retrieve it by key. They are then put in
  a set with the `PARAMETER_NODES` special property.
 
-[See in context](./src/index.js#L111-L122)
+[See in context](./src/index.ts#L145-L156)
 
 
 
@@ -95,7 +95,7 @@ I choosen to allow no implicit wildcard an instead require
  while designing REST APIs. Mot of the time you know what
  your node will contain and filtering it is the best option.
 
-[See in context](./src/index.js#L172-L181)
+[See in context](./src/index.ts#L216-L225)
 
 
 
@@ -103,6 +103,7 @@ I choosen to allow no implicit wildcard an instead require
 
 To optimize nodes search, the basic workflow is:
 - find a map with nodes lengths
+- walk through the tree to find a value
 
-[See in context](./src/index.js#L252-L257)
+[See in context](./src/index.ts#L306-L311)
 
