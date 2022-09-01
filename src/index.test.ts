@@ -1,3 +1,4 @@
+import { describe, test } from '@jest/globals';
 import { Siso } from './index.js';
 import assert from 'assert';
 
