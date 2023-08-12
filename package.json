@@ -25,7 +25,7 @@
     ]
   },
   "name": "siso",
-  "version": "5.0.2",
+  "version": "6.0.0",
   "description": "siso is a routing utility allowing to map a path to a value",
   "type": "module",
   "main": "dist/index.js",
