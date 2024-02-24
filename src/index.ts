@@ -387,16 +387,16 @@ function _assignParameterPart<P extends SisoParamValue>(
     'string' === paramDefinition.type
       ? pathNode
       : 'boolean' === paramDefinition.type
-      ? _parseBoolean(pathNode)
-      : 'number' === paramDefinition.type
-      ? _parseReentrantNumber(pathNode)
-      : (() => {
-          throw new YError(
-            'E_UNSUPPORTED_TYPE',
-            paramDefinition.name,
-            paramDefinition.type,
-          );
-        })();
+        ? _parseBoolean(pathNode)
+        : 'number' === paramDefinition.type
+          ? _parseReentrantNumber(pathNode)
+          : (() => {
+              throw new YError(
+                'E_UNSUPPORTED_TYPE',
+                paramDefinition.name,
+                paramDefinition.type,
+              );
+            })();
   parameters[paramDefinition.name] = value as P;
   return parameters;
 }
