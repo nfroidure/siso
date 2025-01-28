@@ -1,14 +1,14 @@
-import { describe, test } from '@jest/globals';
+import { describe, test, expect } from '@jest/globals';
 import { Siso } from './index.js';
-import assert from 'assert';
+import { YError } from 'yerror';
 
 describe('siso', () => {
   describe('constructor', () => {
     test('should work', () => {
       const siso = new Siso();
 
-      assert.equal(typeof siso.register, 'function');
-      assert.equal(typeof siso.find, 'function');
+      expect(typeof siso.register).toEqual('function');
+      expect(typeof siso.find).toEqual('function');
     });
   });
 
@@ -51,9 +51,14 @@ describe('siso', () => {
     test('should fail with no value', () => {
       const siso = new Siso();
 
-      assert.throws(() => {
+      try {
         siso.register(['v1', 'users'], undefined);
-      }, /E_BAD_VALUE/);
+        throw new YError('E_UNEXPECTED_SUCCESS');
+      } catch (err) {
+        expect(err).toMatchInlineSnapshot(
+          `[YError: E_BAD_VALUE (): E_BAD_VALUE]`,
+        );
+      }
     });
 
     test('should fail when registering a param with different patterns', () => {
@@ -72,7 +77,7 @@ describe('siso', () => {
         'user.detail.pictures',
       );
 
-      assert.throws(() => {
+      try {
         siso.register(
           [
             'v1',
@@ -86,7 +91,12 @@ describe('siso', () => {
           ],
           'user.detail.pictures.thumbnail',
         );
-      }, /E_PARAM_OVERRIDE/);
+        throw new YError('E_UNEXPECTED_SUCCESS');
+      } catch (err) {
+        expect(err).toMatchInlineSnapshot(
+          `[YError: E_PARAM_OVERRIDE (userId): E_PARAM_OVERRIDE]`,
+        );
+      }
     });
 
     test('should fail when registering pattern that override a value', () => {
@@ -106,7 +116,7 @@ describe('siso', () => {
         'user.detail.pictures',
       );
 
-      assert.throws(() => {
+      try {
         siso.register(
           [
             'v1',
@@ -120,7 +130,12 @@ describe('siso', () => {
           ],
           'user.detail.pictures2',
         );
-      }, /E_NODE_OVERRIDE/);
+        throw new YError('E_UNEXPECTED_SUCCESS');
+      } catch (err) {
+        expect(err).toMatchInlineSnapshot(
+          `[YError: E_NODE_OVERRIDE (pictures): E_NODE_OVERRIDE]`,
+        );
+      }
     });
 
     test('should fail when registering pattern that override a value', () => {
@@ -139,7 +154,7 @@ describe('siso', () => {
         'user.detail.pictures',
       );
 
-      assert.throws(() => {
+      try {
         siso.register(
           [
             'v1',
@@ -152,80 +167,72 @@ describe('siso', () => {
           ],
           'user.detail.pictures2',
         );
-      }, /E_PARAM_OVERRIDE/);
+        throw new YError('E_UNEXPECTED_SUCCESS');
+      } catch (err) {
+        expect(err).toMatchInlineSnapshot(
+          `[YError: E_PARAM_OVERRIDE (userId): E_PARAM_OVERRIDE]`,
+        );
+      }
     });
   });
 
   describe('find', () => {
-    test('should work with nothing registered', () => {
+    describe('should work with nothing registered', () => {
       const siso = new Siso();
 
-      assert.deepEqual(
-        siso.find(['v1']),
-        [undefined, {}],
-        'Fail with one node',
-      );
+      test('should fail with one node', () => {
+        expect(siso.find(['v1'])).toEqual([undefined, {}]);
+      });
 
-      assert.deepEqual(
-        siso.find(['v1', 'users', '1']),
-        [undefined, {}],
-        'Fail with several nodes',
-      );
+      test('should fail with several nodes', () => {
+        expect(siso.find(['v1', 'users', '1'])).toEqual([undefined, {}]);
+      });
     });
 
-    test('should work with one string', () => {
+    describe('should work with one string', () => {
       const siso = new Siso();
 
       siso.register(['v1'], 'v1_value');
 
       siso.register(['v2'], 'v2_value');
 
-      assert.deepEqual(
-        siso.find(['v1']),
-        ['v1_value', {}],
-        'Work with the first registered node',
-      );
+      test('should work with the first registered node', () => {
+        expect(siso.find(['v1'])).toEqual(['v1_value', {}]);
+      });
 
-      assert.deepEqual(
-        siso.find(['v2']),
-        ['v2_value', {}],
-        'Work with the second registered node',
-      );
+      test('should work with the second registered node', () => {
+        expect(siso.find(['v2'])).toEqual(['v2_value', {}]);
+      });
 
-      assert.deepEqual(
-        siso.find(['v3']),
-        [undefined, {}],
-        'Fail with non registered content',
-      );
+      test('should fail with non registered content', () => {
+        expect(siso.find(['v3'])).toEqual([undefined, {}]);
+      });
     });
 
-    test('should work with several strings', () => {
+    describe('should work with several strings', () => {
       const siso = new Siso();
 
       siso.register(['v1', 'users'], 'user.list');
 
       siso.register(['v1', 'organizations'], 'organization.list');
 
-      assert.deepEqual(
-        siso.find(['v1', 'users']),
-        ['user.list', {}],
-        'Work with the first registered node',
-      );
+      test('should work with the first registered node', () => {
+        expect(siso.find(['v1', 'users'])).toEqual(['user.list', {}]);
+      });
 
-      assert.deepEqual(
-        siso.find(['v1', 'organizations']),
-        ['organization.list', {}],
-        'Work with the second registered node',
-      );
+      test('should work with the second registered node', () => {
+        expect(siso.find(['v1', 'organizations'])).toEqual([
+          'organization.list',
+          {},
+        ]);
+      });
 
-      assert.deepEqual(
-        siso.find(['v2', 'organizations']),
-        [undefined, {}],
-        'Fail with non registered content',
-      );
+      test('should fail with non registered content', () => {
+        expect(siso.find(['v2', 'organizations'])).toEqual([undefined, {}]);
+      });
     });
 
-    test('should work with only one param node', () => {
+    describe('should work with only one param node', () => {
       const siso = new Siso();
 
       siso.register(
@@ -250,29 +257,27 @@ describe('siso', () => {
         'type_value',
       );
 
-      assert.deepEqual(
-        siso.find(['abbacacaabbacacaabbacaca']),
-        ['id_value', { id: 'abbacacaabbacacaabbacaca' }],
-        'Work with the first registered nodes',
-      );
-      assert.deepEqual(
-        siso.find(['lol']),
-        ['type_value', { type: 'lol' }],
-        'Work with the second registered nodes',
-      );
-      assert.deepEqual(
-        siso.find(['test']),
-        ['type_value', { type: 'test' }],
-        'Work with the second registered nodes',
-      );
-      assert.deepEqual(
-        siso.find(['whatdoyouwant']),
-        [undefined, {}],
-        'Fail with no match',
-      );
+      test('should work with the first registered nodes', () => {
+        expect(siso.find(['abbacacaabbacacaabbacaca'])).toEqual([
+          'id_value',
+          { id: 'abbacacaabbacacaabbacaca' },
+        ]);
+      });
+
+      test('should work with the second registered nodes', () => {
+        expect(siso.find(['lol'])).toEqual(['type_value', { type: 'lol' }]);
+      });
+
+      test('should work with the second registered nodes', () => {
+        expect(siso.find(['test'])).toEqual(['type_value', { type: 'test' }]);
+      });
+
+      test('should fail with no match', () => {
+        expect(siso.find(['whatdoyouwant'])).toEqual([undefined, {}]);
+      });
     });
 
-    test('should work with one param at the begining', () => {
+    describe('should work with one param at the begining', () => {
       const siso = new Siso();
 
       siso.register(
@@ -299,45 +304,46 @@ describe('siso', () => {
         'type_value',
       );
 
-      assert.deepEqual(
-        siso.find(['abbacacaabbacacaabbacaca', 'id_test']),
-        ['id_value', { id: 'abbacacaabbacacaabbacaca' }],
-        'Should work with the first registered nodes',
-      );
+      test('should should work with the first registered nodes', () => {
+        expect(siso.find(['abbacacaabbacacaabbacaca', 'id_test'])).toEqual([
+          'id_value',
+          { id: 'abbacacaabbacacaabbacaca' },
+        ]);
+      });
 
-      assert.deepEqual(
-        siso.find(['abbacacaabbacacaabbacaca', 'id_test']),
-        ['id_value', { id: 'abbacacaabbacacaabbacaca' }],
-        'Should work with the second registered nodes',
-      );
+      test('should work with the second registered nodes', () => {
+        expect(siso.find(['abbacacaabbacacaabbacaca', 'id_test'])).toEqual([
+          'id_value',
+          { id: 'abbacacaabbacacaabbacaca' },
+        ]);
+      });
 
-      assert.deepEqual(
-        siso.find(['whatdoyouwant']),
-        [undefined, {}],
-        'Should fail with unregistered pathes',
-      );
+      test('should fail with unregistered pathes ', () => {
+        expect(siso.find(['whatdoyouwant'])).toEqual([undefined, {}]);
+      });
 
-      assert.deepEqual(
-        siso.find(['what', 'do', 'you', 'want']),
-        [undefined, {}],
-        'Should fail with unregistered pathes',
-      );
+      test('should fail with unregistered pathes', () => {
+        expect(siso.find(['what', 'do', 'you', 'want'])).toEqual([
+          undefined,
+          {},
+        ]);
+      });
 
-      assert.deepEqual(
-        siso.find([
-          'abbacacaabbacacaabbacaca',
-          'abbacacaabbacacaabbacaca',
-          'abbacacaabbacacaabbacaca',
-        ]),
-        [undefined, {}],
-        'Should fail with unregistered pathes',
-      );
+      test('should fail with unregistered pathes', () => {
+        expect(
+          siso.find([
+            'abbacacaabbacacaabbacaca',
+            'abbacacaabbacacaabbacaca',
+            'abbacacaabbacacaabbacaca',
+          ]),
+        ).toEqual([undefined, {}]);
+      });
 
-      assert.deepEqual(
-        siso.find(['abbacacaabbacacaabbacaca', 'id_test', 'test']),
-        [undefined, {}],
-        'Should fail with pathes begining with a registered',
-      );
+      test('should fail with pathes begining with a registered', () => {
+        expect(
+          siso.find(['abbacacaabbacacaabbacaca', 'id_test', 'test']),
+        ).toEqual([undefined, {}]);
+      });
     });
 
     test('should work with one params at the end', () => {
@@ -369,7 +375,7 @@ describe('siso', () => {
         'organization.detail',
       );
 
-      assert.deepEqual(siso.find(['v1', 'users', 'abbacacaabbacacaabbacaca']), [
+      expect(siso.find(['v1', 'users', 'abbacacaabbacacaabbacaca'])).toEqual([
         'user.detail',
         { userId: 'abbacacaabbacacaabbacaca' },
       ]);
@@ -405,10 +411,12 @@ describe('siso', () => {
         'organization.detail',
       );
 
-      assert.deepEqual(
+      expect(
         siso.find(['v1', 'users', 'abbacacaabbacacaabbacaca', 'pictures']),
-        ['user.detail.pictures', { userId: 'abbacacaabbacacaabbacaca' }],
-      );
+      ).toEqual([
+        'user.detail.pictures',
+        { userId: 'abbacacaabbacacaabbacaca' },
+      ]);
     });
 
     test('should work with several params', () => {
@@ -452,15 +460,14 @@ describe('siso', () => {
         'user2.detail.pictures.num',
       );
 
-      assert.deepEqual(
+      expect(
         siso.find(['v1', 'users', 'abbacacaabbacacaabbacaca', 'pictures', '1']),
-        [
-          'user.detail.pictures.num',
-          { userId: 'abbacacaabbacacaabbacaca', pictureNumber: '1' },
-        ],
-      );
+      ).toEqual([
+        'user.detail.pictures.num',
+        { userId: 'abbacacaabbacacaabbacaca', pictureNumber: '1' },
+      ]);
 
-      assert.deepEqual(
+      expect(
         siso.find([
           'v1',
           'users',
@@ -468,11 +475,10 @@ describe('siso', () => {
           'pictures',
           '11',
         ]),
-        [
-          'user2.detail.pictures.num',
-          { userId2: 'abbacacaabbacacaabbacacaaa', pictureNumber2: '11' },
-        ],
-      );
+      ).toEqual([
+        'user2.detail.pictures.num',
+        { userId2: 'abbacacaabbacacaabbacacaaa', pictureNumber2: '11' },
+      ]);
     });
 
     test('should work when registering a node that has value and subnodes', () => {
@@ -482,9 +488,9 @@ describe('siso', () => {
 
       siso.register(['v1', 'users', 'pictures'], 'user.list.pictures');
 
-      assert.deepEqual(siso.find(['v1', 'users']), ['user.list', {}]);
+      expect(siso.find(['v1', 'users'])).toEqual(['user.list', {}]);
 
-      assert.deepEqual(siso.find(['v1', 'users', 'pictures']), [
+      expect(siso.find(['v1', 'users', 'pictures'])).toEqual([
         'user.list.pictures',
         {},
       ]);
@@ -520,18 +526,18 @@ describe('siso', () => {
         'user.detail.pictures',
       );
 
-      assert.deepEqual(siso.find(['v1', 'users', '1']), [
+      expect(siso.find(['v1', 'users', '1'])).toEqual([
         'user.detail',
-        { userId: 1 },
+        { userId: '1' },
       ]);
 
-      assert.deepEqual(siso.find(['v1', 'users', '1', 'pictures']), [
+      expect(siso.find(['v1', 'users', '1', 'pictures'])).toEqual([
         'user.detail.pictures',
-        { userId: 1 },
+        { userId: '1' },
       ]);
     });
 
-    test('should work with number param', () => {
+    describe('should work with number param', () => {
       const siso = new Siso();
 
       siso.register(
@@ -546,13 +552,13 @@ describe('siso', () => {
         'id_value',
       );
 
-      assert.deepEqual(
-        siso.find(['users', '15']),
-        ['id_value', { id: 15 }],
-        'Work with the good type in output',
-      );
+      test('should work with the good type in output', () => {
+        expect(siso.find(['users', '15'])).toEqual(['id_value', { id: 15 }]);
+      });
 
-      assert.deepEqual(siso.find(['users', '15.67']), [undefined, {}]);
+      test('should fail with a bad type in input', () => {
+        expect(siso.find(['users', '15.67'])).toEqual([undefined, {}]);
+      });
     });
 
     test('should work with boolean param', () => {
@@ -570,15 +576,12 @@ describe('siso', () => {
         'id_value',
       );
 
-      assert.deepEqual(siso.find(['lamp', 'false']), [
+      expect(siso.find(['lamp', 'false'])).toEqual([
         'id_value',
         { isOn: false },
       ]);
 
-      assert.deepEqual(siso.find(['lamp', 'true']), [
-        'id_value',
-        { isOn: true },
-      ]);
+      expect(siso.find(['lamp', 'true'])).toEqual(['id_value', { isOn: true }]);
     });
 
     test('should work with enum param', () => {
@@ -596,15 +599,12 @@ describe('siso', () => {
         'id_value',
       );
 
-      assert.deepEqual(siso.find(['lamp', 'false']), [
+      expect(siso.find(['lamp', 'false'])).toEqual([
         'id_value',
         { isOn: false },
       ]);
 
-      assert.deepEqual(siso.find(['lamp', 'true']), [
-        'id_value',
-        { isOn: true },
-      ]);
+      expect(siso.find(['lamp', 'true'])).toEqual(['id_value', { isOn: true }]);
     });
   });
 });
