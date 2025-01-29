@@ -1,3 +1,22 @@
+# [7.0.0](https://github.com/nfroidure/siso/compare/v6.0.2...v7.0.0) (2025-01-29)
+
+
+### Bug Fixes
+
+* **dependencies:** remove unused dependencies ([fcac5a7](https://github.com/nfroidure/siso/commit/fcac5a7d2c4e946b8bd91173b686f7a7019aebe8))
+
+
+### Code Refactoring
+
+* **core:** require validation function istead of patterns and enums ([58982f0](https://github.com/nfroidure/siso/commit/58982f0c56a3ebd9e58f9ba9dabbf621524a87c0)), closes [#45](https://github.com/nfroidure/siso/issues/45)
+
+
+### BREAKING CHANGES
+
+* **core:** Will have to provide fucntions (for example AJV validators) instead of patterns.
+
+
+
 ## [6.0.2](https://github.com/nfroidure/siso/compare/v6.0.1...v6.0.2) (2024-02-24)
 
 
