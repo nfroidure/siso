@@ -105,7 +105,6 @@
   },
   "dependencies": {
     "debug": "^4.4.0",
-    "regexp-tpl": "^2.0.1",
     "yerror": "^8.0.0"
   },
   "config": {
