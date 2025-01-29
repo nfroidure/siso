@@ -13,24 +13,27 @@
 
 [//]: # (::contents:start)
 
-`siso` stands for "Shit In Shit Out". It allows to build
- routers without embedding a framework and falling
- into the gorilla banana problem ;).
+`siso` stands for "Shit In Shit Out". It allows to build routers without
+embedding a framework and falling into the gorilla banana problem ;).
 
-It also match the French "ciseau" word pronunciation which
- means "chisel".
+It also matches the French "ciseau" word pronunciation which means "chisel".
 
-The parameters definition somewhat matches the Swagger one
- so that you will be able to use Siso with your swagger
- definition easily.
+Siso, works only for fixed length paths nodes which makes it fast. It also do no
+define the values validation and just takes a function returning a boolean to
+test the value.
+
+If you plan to use it with OpenAPI, you have to know that the parameters
+definitions do not match the whole OpenAPI variants yet. It can only be used
+with the `simple` style variant and unique primitive values.
 
 ## Usage
-The `siso` concept is pretty simple. You associate paths
- patterns to values, then you pass a path in and get values
- and parameters out. And that's it, fair enough ;).
 
-`siso` does not decide which separator is used for your
- paths so that you can use it for any routing concern.
+The `siso` concept is pretty simple. You associate paths patterns to values,
+then you pass a path in and get values and parameters out. And that's it, fair
+enough ;).
+
+`siso` does not decide which separator is used for your paths so that you can
+use it for any routing concern.
 
 ```js
 import { Siso } from siso;
@@ -50,7 +53,7 @@ siso.register([
   {
     name: 'id',
     type: 'number',
-    pattern: /^[0-9]+$/,
+    validate: (str) => /^[0-9]+$/.test(str),
   },
 ], 'user.detail');
 
@@ -59,29 +62,25 @@ siso.find(['v1', 'users', '12']);
 // Returns: ['user.detail', {id: 12}]
 ```
 
-Note that you can provide any value for a given path.
- It may be a function, an array, an object or a string
- depending of your needs.
+Note that you can provide any value for a given path. It may be a function, an
+array, an object or a string depending of your needs.
 
-Despite its simplicity, `siso` is very opinionated since
- it won't allow you to define several values for the
- same path pattern and will throw if such situation happens.
+Despite its simplicity, `siso` is very opinionated since it won't allow you to
+define several values for the same path pattern and will throw if such situation
+happens.
 
-It is very different from the kind of routing systems you
- probably used before. Frameworks like Express would allow
- registering several middlewares for the same path, for
- instance.
+It is very different from the kind of routing systems you probably used before.
+Frameworks like Express would allow registering several middlewares for the same
+path, for instance.
 
-My opinion is that it is a bad thing. Every route should
- have a single handler and higher order functions should
- be used instead. That way, you have the overhaul workflow
- of each route in their own controllers. No magic, no need to
- guess what happens before/after the route handler.
- [Read my blog post on this concern](http://insertafter.com/en/blog/no_more_middlewares.html).
+My opinion is that it is a bad thing. Every route should have a single handler
+and higher order functions should be used instead. That way, you have the
+overhaul workflow of each route in their own controllers. No magic, no need to
+guess what happens before/after the route handler.
+[Read my blog post on this concern](http://insertafter.com/en/blog/no_more_middlewares.html).
 
-`siso` is just a building block, if you need a higher
- level way to deal with routers see
- [swagger-http-router](https://github.com/nfroidure/swagger-http-router).
+`siso` is just a building block, if you need a higher level way to deal with
+routers see [whook](https://github.com/nfroidure/whook).
 
 [//]: # (::contents:end)
 
@@ -95,7 +94,7 @@ Siso
 
 * [Siso](#Siso)
     * [new Siso()](#new_Siso_new)
-    * [.register(pathPatternNodes, value)](#Siso+register) ⇒ <code>void</code>
+    * [.register(pathNodes, value)](#Siso+register) ⇒ <code>void</code>
     * [.find(pathNodes)](#Siso+find) ⇒ <code>void</code>
 
 <a name="new_Siso_new"></a>
@@ -112,15 +111,15 @@ const siso = new Siso();
 ```
 <a name="Siso+register"></a>
 
-### siso.register(pathPatternNodes, value) ⇒ <code>void</code>
-Register a value for a pattern path
+### siso.register(pathNodes, value) ⇒ <code>void</code>
+Register a value for given path nodes
 
 **Kind**: instance method of [<code>Siso</code>](#Siso)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| pathPatternNodes | <code>Array</code> | The various nodes of the path pattern |
-| value | <code>any</code> | The value registered for the given path pattern |
+| pathNodes | <code>Array</code> | The various nodes of the path |
+| value | <code>any</code> | The value registered for the given path nodes |
 
 **Example**  
 ```js
@@ -128,14 +127,14 @@ import { Siso } from 'siso';
 
 const siso = new Siso();
 
-// Path pattern nodes may be simple strings
+// Path nodes may be simple strings
 siso.register(['v1', 'users'], 'user.list');
 
-// Or parameters with a name and its corresponding node pattern
+// Or dynamic nodes with a name and its corresponding validation function
 siso.register([
   'v1',
   'users',
-  { name: 'id', pattern: /[a-f0-9]{24}/, type: 'string' },
+  { name: 'id', validate: (str) => /[a-f0-9]{24}/.test(str), type: 'string' },
 ], 'user.details');
 ```
 <a name="Siso+find"></a>

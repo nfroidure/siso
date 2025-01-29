@@ -11,7 +11,6 @@
 2. [Indexing with Maps in Maps](#2-indexing-with-maps-in-maps)
    1. [Indexing by Nodes Length](#21-indexing-by-nodes-length)
    2. [Indexing each Nodes](#22-indexing-each-nodes)
-   3. [Enum or pattern](#23-enum-or-pattern)
 3. [Search workflow](#3-search-workflow)
 
 
@@ -25,24 +24,24 @@ I could have created a higher order function but I find
 
 You may wonder why there is no mention of HTTP methods.
  The fact is that this router is made to be generic and
- usable either in backend, frontend or whatever needing
+ usable either in the backend, frontend or whatever needing
  to deal with paths in some way. If you are to use `Siso`
  for routing in an HTTP server, you should create a `Siso`
  instance for each HTTP method you plan to support.
 
- `Siso` allows to organize the data in an optimized for
- search way. There are then some tradeoffs you should be
+ `Siso` allows to organize the data in a search optimized
+ way. There is then some tradeoffs you should be
  aware of:
 
-* fixed length: you cannot register paths with an
+- fixed length: you cannot register paths with an
  undefined length. Things like `register(['v0', '*'])`
  where `*` means any number of nodes is not allowed.
-* one parameter per node: if you want to create a route
+- one parameter per dynamic node: if you want to create a route
  like `/coords/$lat-$lng` you'll have no way of retrieving
 `lat` and `lng` values separately from `Siso`. You will just
  retrieve a string you'll have to parse by yourself. The
  reason behind that is to KISS. This is an edge case in APIs
- so i do not want it to slow down the router matching system.
+ so I do not want it to slow down the router matching system.
 
 [See in context](./src/index.ts#L40-L69)
 
@@ -54,7 +53,7 @@ To optimize the search, the basic workflow is:
 - find the root map with the given nodes lengths
 - recursively find in the child maps for each nodes
 
-[See in context](./src/index.ts#L117-L122)
+[See in context](./src/index.ts#L114-L119)
 
 
 
@@ -65,37 +64,24 @@ Routers nodes are indexed by their number of nodes
  comparison/regexp matching as the distribution of the
  paths lengths.
 
-[See in context](./src/index.ts#L130-L136)
+[See in context](./src/index.ts#L127-L133)
 
 
 
 ### 2.2. Indexing each Nodes
 
 A node can be a string, if so, we just use it as a key.
- Otherwise, it is a parameter with some regular expressions
- to match it, if so, there are some additionnal work.
+ Otherwise, it is a dynamic node with some validation
+ function to match it, if so, there are some additional
+ work.
 
 To ensure parameters unicity we maintain a map of every
- parameters in the `_parameters` property. Also since
- parameters needs some regular expression mathing work,
+ dynamic nodes in the `_dynamicNodes` property. Also since
+ dynamic nodes needs some validation function work,
  we cannot just retrieve it by key. They are then put in
  a set with the `PARAMETER_NODES` special property.
 
-[See in context](./src/index.ts#L145-L156)
-
-
-
-### 2.3. Enum or pattern
-
-Declaring an `enum` or a `pattern` property is mandatory
- to properly registering a node.
-
-I choosen to allow no implicit wildcard an instead require
- to do it explicitly since it is an unfrequent pattern
- while designing REST APIs. Mot of the time you know what
- your node will contain and filtering it is the best option.
-
-[See in context](./src/index.ts#L216-L225)
+[See in context](./src/index.ts#L142-L154)
 
 
 
@@ -105,5 +91,5 @@ To optimize nodes search, the basic workflow is:
 - find a map with nodes lengths
 - walk through the tree to find a value
 
-[See in context](./src/index.ts#L306-L311)
+[See in context](./src/index.ts#L283-L288)
 

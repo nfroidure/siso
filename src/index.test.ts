@@ -29,7 +29,7 @@ describe('siso', () => {
       siso.register(['v1', 'users', '1'], 'user.1');
     });
 
-    test('should work with parameter nodes', () => {
+    test('should work with dynamic nodes', () => {
       const siso = new Siso();
 
       siso.register(['v1', 'users'], 'user.list');
@@ -41,10 +41,43 @@ describe('siso', () => {
           {
             name: 'id',
             type: 'string',
-            pattern: '[a-f0-9]{24}',
+            validate: (str) => /^[a-f0-9]{24}$/.test(str),
           },
         ],
         'user.detail',
+      );
+    });
+
+    test('should work with properly overridden dynamic nodes', () => {
+      const siso = new Siso();
+      const userValidator = (str) => /^[a-f0-9]{24}$/.test(str);
+
+      siso.register(['v1', 'users'], 'user.list');
+
+      siso.register(
+        [
+          'v1',
+          'users',
+          {
+            name: 'id',
+            type: 'string',
+            validate: userValidator,
+          },
+        ],
+        'user.detail',
+      );
+      siso.register(
+        [
+          'v1',
+          'users',
+          {
+            name: 'id',
+            type: 'string',
+            validate: userValidator,
+          },
+          'pictures',
+        ],
+        'user.picture.list',
       );
     });
 
@@ -61,7 +94,7 @@ describe('siso', () => {
       }
     });
 
-    test('should fail when registering a param with different patterns', () => {
+    test('should fail when registering a param with different validators', () => {
       const siso = new Siso();
 
       siso.register(
@@ -71,7 +104,7 @@ describe('siso', () => {
           {
             name: 'userId',
             type: 'string',
-            pattern: '[a-f0-9]{24}',
+            validate: (str) => /^[a-f0-9]{24}$/.test(str),
           },
         ],
         'user.detail.pictures',
@@ -85,7 +118,7 @@ describe('siso', () => {
             {
               name: 'userId',
               type: 'number',
-              pattern: '[0-9]{3}',
+              validate: (num) => /^[0-9]{3}$/.test(num.toString()),
             },
             'thumbnail',
           ],
@@ -99,8 +132,9 @@ describe('siso', () => {
       }
     });
 
-    test('should fail when registering pattern that override a value', () => {
+    test('should fail when registering nodes that override a leaf', () => {
       const siso = new Siso();
+      const userValidator = (str) => /^[a-f0-9]{24}$/.test(str);
 
       siso.register(
         [
@@ -109,7 +143,7 @@ describe('siso', () => {
           {
             name: 'userId',
             type: 'string',
-            pattern: '[a-f0-9]{24}',
+            validate: userValidator,
           },
           'pictures',
         ],
@@ -124,7 +158,7 @@ describe('siso', () => {
             {
               name: 'userId',
               type: 'string',
-              pattern: '[a-f0-9]{24}',
+              validate: userValidator,
             },
             'pictures',
           ],
@@ -148,7 +182,7 @@ describe('siso', () => {
           {
             name: 'userId',
             type: 'string',
-            pattern: '[a-f0-9]{24}',
+            validate: (str) => /^[a-f0-9]{24}$/.test(str),
           },
         ],
         'user.detail.pictures',
@@ -162,7 +196,7 @@ describe('siso', () => {
             {
               name: 'userId',
               type: 'number',
-              pattern: '[0-9]{2}',
+              validate: (num) => /^[0-9]{2}$/.test(num.toString()),
             },
           ],
           'user.detail.pictures2',
@@ -177,7 +211,7 @@ describe('siso', () => {
   });
 
   describe('find', () => {
-    describe('should work with nothing registered', () => {
+    describe('with nothing registered', () => {
       const siso = new Siso();
 
       test('should fail with one node', () => {
@@ -189,7 +223,7 @@ describe('siso', () => {
       });
     });
 
-    describe('should work with one string', () => {
+    describe('with one string', () => {
       const siso = new Siso();
 
       siso.register(['v1'], 'v1_value');
@@ -209,7 +243,7 @@ describe('siso', () => {
       });
     });
 
-    describe('should work with several strings', () => {
+    describe('with several strings', () => {
       const siso = new Siso();
 
       siso.register(['v1', 'users'], 'user.list');
@@ -232,7 +266,7 @@ describe('siso', () => {
       });
     });
 
-    describe('should work with only one param node', () => {
+    describe('with only one param node', () => {
       const siso = new Siso();
 
       siso.register(
@@ -240,7 +274,7 @@ describe('siso', () => {
           {
             name: 'id',
             type: 'string',
-            pattern: '[a-f0-9]{24}',
+            validate: (str) => /^[a-f0-9]{24}$/.test(str),
           },
         ],
         'id_value',
@@ -251,7 +285,7 @@ describe('siso', () => {
           {
             name: 'type',
             type: 'string',
-            pattern: 'lol|test',
+            validate: (str) => ['lol', 'test'].includes(str),
           },
         ],
         'type_value',
@@ -277,7 +311,7 @@ describe('siso', () => {
       });
     });
 
-    describe('should work with one param at the begining', () => {
+    describe('with one param at the beginning', () => {
       const siso = new Siso();
 
       siso.register(
@@ -285,7 +319,7 @@ describe('siso', () => {
           {
             name: 'id',
             type: 'string',
-            pattern: '[a-f0-9]{24}',
+            validate: (str) => /^[a-f0-9]{24}$/.test(str),
           },
           'id_test',
         ],
@@ -297,7 +331,7 @@ describe('siso', () => {
           {
             name: 'type',
             type: 'string',
-            pattern: 'lol|test',
+            validate: (str) => ['lol', 'test'].includes(str),
           },
           'type_test',
         ],
@@ -356,7 +390,7 @@ describe('siso', () => {
           {
             name: 'userId',
             type: 'string',
-            pattern: '[a-f0-9]{24}',
+            validate: (str) => /^[a-f0-9]{24}$/.test(str),
           },
         ],
         'user.detail',
@@ -369,7 +403,7 @@ describe('siso', () => {
           {
             name: 'organizationId',
             type: 'string',
-            pattern: '[a-f0-9]{24}',
+            validate: (str) => /^[a-f0-9]{24}$/.test(str),
           },
         ],
         'organization.detail',
@@ -391,7 +425,7 @@ describe('siso', () => {
           {
             name: 'userId',
             type: 'string',
-            pattern: '[a-f0-9]{24}',
+            validate: (str) => /^[a-f0-9]{24}$/.test(str),
           },
           'pictures',
         ],
@@ -405,7 +439,7 @@ describe('siso', () => {
           {
             name: 'organizationId',
             type: 'string',
-            pattern: '[a-f0-9]{24}',
+            validate: (str) => /^[a-f0-9]{24}$/.test(str),
           },
         ],
         'organization.detail',
@@ -429,13 +463,13 @@ describe('siso', () => {
           {
             name: 'userId',
             type: 'string',
-            pattern: '^[a-f0-9]{24}$',
+            validate: (str) => /^[a-f0-9]{24}$/.test(str),
           },
           'pictures',
           {
             name: 'pictureNumber',
             type: 'string',
-            pattern: '^[0-9]{1}$',
+            validate: (str) => /^[0-9]{1}$/.test(str),
           },
         ],
         'user.detail.pictures.num',
@@ -448,13 +482,13 @@ describe('siso', () => {
           {
             name: 'userId2',
             type: 'string',
-            pattern: '[a-f0-9]{26}',
+            validate: (str) => /^[a-f0-9]{26}$/.test(str),
           },
           'pictures',
           {
             name: 'pictureNumber2',
             type: 'string',
-            pattern: '[0-9]{2}',
+            validate: (str) => /^[0-9]{2}$/.test(str),
           },
         ],
         'user2.detail.pictures.num',
@@ -498,6 +532,7 @@ describe('siso', () => {
 
     test('should work when registering a param that has value and subnodes', () => {
       const siso = new Siso();
+      const userValidator = (str) => /^[0-9]+$/.test(str);
 
       siso.register(
         [
@@ -506,7 +541,7 @@ describe('siso', () => {
           {
             name: 'userId',
             type: 'string',
-            pattern: '[0-9]+',
+            validate: userValidator,
           },
         ],
         'user.detail',
@@ -519,7 +554,7 @@ describe('siso', () => {
           {
             name: 'userId',
             type: 'string',
-            pattern: '[0-9]+',
+            validate: userValidator,
           },
           'pictures',
         ],
@@ -537,7 +572,7 @@ describe('siso', () => {
       ]);
     });
 
-    describe('should work with number param', () => {
+    describe('with number param', () => {
       const siso = new Siso();
 
       siso.register(
@@ -546,7 +581,7 @@ describe('siso', () => {
           {
             name: 'id',
             type: 'number',
-            pattern: '^[0-9]+$',
+            validate: (num) => /^[0-9]+$/.test(num.toString()),
           },
         ],
         'id_value',
@@ -570,7 +605,7 @@ describe('siso', () => {
           {
             name: 'isOn',
             type: 'boolean',
-            pattern: 'false|true',
+            validate: (bool) => /^false|true$/.test(bool.toString()),
           },
         ],
         'id_value',
@@ -593,7 +628,7 @@ describe('siso', () => {
           {
             name: 'isOn',
             type: 'boolean',
-            enum: [false, true],
+            validate: (bool) => ['false', 'true'].includes(bool.toString()),
           },
         ],
         'id_value',

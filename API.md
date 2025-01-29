@@ -8,7 +8,7 @@ Siso
 
 * [Siso](#Siso)
     * [new Siso()](#new_Siso_new)
-    * [.register(pathPatternNodes, value)](#Siso+register) ⇒ <code>void</code>
+    * [.register(pathNodes, value)](#Siso+register) ⇒ <code>void</code>
     * [.find(pathNodes)](#Siso+find) ⇒ <code>void</code>
 
 <a name="new_Siso_new"></a>
@@ -25,15 +25,15 @@ const siso = new Siso();
 ```
 <a name="Siso+register"></a>
 
-### siso.register(pathPatternNodes, value) ⇒ <code>void</code>
-Register a value for a pattern path
+### siso.register(pathNodes, value) ⇒ <code>void</code>
+Register a value for given path nodes
 
 **Kind**: instance method of [<code>Siso</code>](#Siso)  
 
 | Param | Type | Description |
 | --- | --- | --- |
-| pathPatternNodes | <code>Array</code> | The various nodes of the path pattern |
-| value | <code>any</code> | The value registered for the given path pattern |
+| pathNodes | <code>Array</code> | The various nodes of the path |
+| value | <code>any</code> | The value registered for the given path nodes |
 
 **Example**  
 ```js
@@ -41,14 +41,14 @@ import { Siso } from 'siso';
 
 const siso = new Siso();
 
-// Path pattern nodes may be simple strings
+// Path nodes may be simple strings
 siso.register(['v1', 'users'], 'user.list');
 
-// Or parameters with a name and its corresponding node pattern
+// Or dynamic nodes with a name and its corresponding validation function
 siso.register([
   'v1',
   'users',
-  { name: 'id', pattern: /[a-f0-9]{24}/, type: 'string' },
+  { name: 'id', validate: (str) => /[a-f0-9]{24}/.test(str), type: 'string' },
 ], 'user.details');
 ```
 <a name="Siso+find"></a>
