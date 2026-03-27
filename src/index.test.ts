@@ -50,7 +50,7 @@ describe('siso', () => {
 
     test('should work with properly overridden dynamic nodes', () => {
       const siso = new Siso();
-      const userValidator = (str) => /^[a-f0-9]{24}$/.test(str);
+      const userValidator = (str: string) => /^[a-f0-9]{24}$/.test(str);
 
       siso.register(['v1', 'users'], 'user.list');
 
@@ -89,7 +89,7 @@ describe('siso', () => {
         throw new YError('E_UNEXPECTED_SUCCESS');
       } catch (err) {
         expect(err).toMatchInlineSnapshot(
-          `[YError: E_BAD_VALUE (): E_BAD_VALUE]`,
+          `[YError: E_BAD_VALUE ([null]): E_BAD_VALUE]`,
         );
       }
     });
@@ -127,14 +127,14 @@ describe('siso', () => {
         throw new YError('E_UNEXPECTED_SUCCESS');
       } catch (err) {
         expect(err).toMatchInlineSnapshot(
-          `[YError: E_PARAM_OVERRIDE (userId): E_PARAM_OVERRIDE]`,
+          `[YError: E_PARAM_OVERRIDE (["userId"]): E_PARAM_OVERRIDE]`,
         );
       }
     });
 
     test('should fail when registering nodes that override a leaf', () => {
       const siso = new Siso();
-      const userValidator = (str) => /^[a-f0-9]{24}$/.test(str);
+      const userValidator = (str: string) => /^[a-f0-9]{24}$/.test(str);
 
       siso.register(
         [
@@ -167,7 +167,7 @@ describe('siso', () => {
         throw new YError('E_UNEXPECTED_SUCCESS');
       } catch (err) {
         expect(err).toMatchInlineSnapshot(
-          `[YError: E_NODE_OVERRIDE (pictures): E_NODE_OVERRIDE]`,
+          `[YError: E_NODE_OVERRIDE (["pictures"]): E_NODE_OVERRIDE]`,
         );
       }
     });
@@ -204,7 +204,7 @@ describe('siso', () => {
         throw new YError('E_UNEXPECTED_SUCCESS');
       } catch (err) {
         expect(err).toMatchInlineSnapshot(
-          `[YError: E_PARAM_OVERRIDE (userId): E_PARAM_OVERRIDE]`,
+          `[YError: E_PARAM_OVERRIDE (["userId"]): E_PARAM_OVERRIDE]`,
         );
       }
     });
@@ -532,7 +532,7 @@ describe('siso', () => {
 
     test('should work when registering a param that has value and subnodes', () => {
       const siso = new Siso();
-      const userValidator = (str) => /^[0-9]+$/.test(str);
+      const userValidator = (str: string) => /^[0-9]+$/.test(str);
 
       siso.register(
         [

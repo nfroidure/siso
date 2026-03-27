@@ -43,7 +43,7 @@ You may wonder why there is no mention of HTTP methods.
  reason behind that is to KISS. This is an edge case in APIs
  so I do not want it to slow down the router matching system.
 
-[See in context](./src/index.ts#L40-L69)
+[See in context](./src/index.ts#L38-L67)
 
 
 
@@ -53,7 +53,7 @@ To optimize the search, the basic workflow is:
 - find the root map with the given nodes lengths
 - recursively find in the child maps for each nodes
 
-[See in context](./src/index.ts#L114-L119)
+[See in context](./src/index.ts#L112-L117)
 
 
 
@@ -64,7 +64,7 @@ Routers nodes are indexed by their number of nodes
  comparison/regexp matching as the distribution of the
  paths lengths.
 
-[See in context](./src/index.ts#L127-L133)
+[See in context](./src/index.ts#L125-L131)
 
 
 
@@ -81,7 +81,7 @@ To ensure parameters unicity we maintain a map of every
  we cannot just retrieve it by key. They are then put in
  a set with the `PARAMETER_NODES` special property.
 
-[See in context](./src/index.ts#L142-L154)
+[See in context](./src/index.ts#L140-L152)
 
 
 
@@ -91,5 +91,5 @@ To optimize nodes search, the basic workflow is:
 - find a map with nodes lengths
 - walk through the tree to find a value
 
-[See in context](./src/index.ts#L283-L288)
+[See in context](./src/index.ts#L281-L286)
 

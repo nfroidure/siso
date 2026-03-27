@@ -21,9 +21,7 @@ type SisoDynamicNode =
     };
 type SisoRawNode = string;
 type SisoNode = SisoRawNode | SisoDynamicNode;
-type SisoNodesValues = {
-  [name: string]: SisoNodeValue;
-};
+type SisoNodesValues = Record<string, SisoNodeValue>;
 type SisoResult<V extends SisoValue> = [V | undefined, SisoNodesValues];
 type SisoParamSet = Set<SisoDynamicNode>;
 type SisoMap<V extends SisoValue> = Map<
@@ -121,7 +119,7 @@ class Siso<V extends SisoValue = SisoValue> {
     let currentPathNodesMap = this._pathNodesByLengthMap.get(nodesLength);
 
     if ('undefined' === typeof value) {
-      throw new YError('E_BAD_VALUE', value);
+      throw new YError('E_BAD_VALUE', [value]);
     }
 
     /* Architecture Note #2.1: Indexing by Nodes Length
@@ -191,10 +189,10 @@ class Siso<V extends SisoValue = SisoValue> {
     if (!isLastNode) {
       nextMap = (currentPathNodesMap.get(pathNode) || new Map()) as SisoMap<V>;
       if (!(nextMap instanceof Map)) {
-        throw new YError('E_VALUE_OVERRIDE', pathNode, nextMap);
+        throw new YError('E_VALUE_OVERRIDE', [pathNode, nextMap]);
       }
     } else if (currentPathNodesMap.get(pathNode)) {
-      throw new YError('E_NODE_OVERRIDE', pathNode);
+      throw new YError('E_NODE_OVERRIDE', [pathNode]);
     }
     currentPathNodesMap.set(
       pathNode,
@@ -222,7 +220,7 @@ class Siso<V extends SisoValue = SisoValue> {
           existingPathNode,
           pathNode,
         );
-        throw new YError('E_PARAM_OVERRIDE', pathNode.name);
+        throw new YError('E_PARAM_OVERRIDE', [pathNode.name]);
       }
     }
 
@@ -235,7 +233,7 @@ class Siso<V extends SisoValue = SisoValue> {
         currentPathNodesMap.get(PARAMETER_KEY_PREFIX + pathNode.name),
         pathNode,
       );
-      throw new YError('E_PARAM_OVERRIDE', pathNode.name);
+      throw new YError('E_PARAM_OVERRIDE', [pathNode.name]);
     }
 
     if (!isLastNode) {
@@ -243,7 +241,7 @@ class Siso<V extends SisoValue = SisoValue> {
         PARAMETER_KEY_PREFIX + pathNode.name,
       ) || new Map()) as SisoMap<V>;
       if (!(nextMap instanceof Map)) {
-        throw new YError('E_VALUE_OVERRIDE', pathNode.name);
+        throw new YError('E_VALUE_OVERRIDE', [pathNode.name]);
       }
     }
 
@@ -350,7 +348,7 @@ class Siso<V extends SisoValue = SisoValue> {
               break;
             }
           } else {
-            throw new YError('E_UNSUPPORTED_TYPE', pattern);
+            throw new YError('E_UNSUPPORTED_TYPE', [pattern]);
           }
         }
 
@@ -387,7 +385,7 @@ function parseReentrantNumber(str: string): number {
   const value = parseFloat(str);
 
   if (value.toString(BASE_10) !== str) {
-    throw new YError('E_NON_REENTRANT_NUMBER', str, value.toString(BASE_10));
+    throw new YError('E_NON_REENTRANT_NUMBER', [str, value.toString(BASE_10)]);
   }
 
   return value;
@@ -399,7 +397,7 @@ function parseBoolean(str: string): boolean {
   } else if ('false' === str) {
     return false;
   }
-  throw new YError('E_BAD_BOOLEAN', str);
+  throw new YError('E_BAD_BOOLEAN', [str]);
 }
 
 export { Siso };
