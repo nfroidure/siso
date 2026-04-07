@@ -1,5 +1,6 @@
 import { YError } from 'yerror';
 import initDebug from 'debug';
+import './errors.js';
 
 type SisoValue = unknown;
 type SisoNodeValue = string | number | boolean;
