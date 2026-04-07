@@ -1,3 +1,5 @@
+# [9.0.0](https://github.com/nfroidure/siso/compare/v8.0.0...v9.0.0) (2026-04-07)
+
 # [8.0.0](https://github.com/nfroidure/siso/compare/v7.0.0...v8.0.0) (2026-03-27)
 
 # [7.0.0](https://github.com/nfroidure/siso/compare/v6.0.2...v7.0.0) (2025-01-29)
