@@ -31,17 +31,18 @@ declare module 'yerror' {
      * Thrown when encountering an unsupported parameter type during route matching.
      * The pattern parameter contains the invalid dynamic node configuration.
      */
-    E_UNSUPPORTED_TYPE: [pattern: unknown];
+    E_UNSUPPORTED_TYPE: [pattern: string, node: string];
 
     /**
-     * Thrown when parsing a number parameter that cannot be safely converted back to its string representation.
-     * This prevents precision loss in number parsing. Parameters: [originalString, parsedValue]
+     * Thrown when a number string cannot be parsed back to the same string (non-reentrant).
+     * @param originalString The original string.
+     * @param parsedValue The parsed and stringified version.
      */
     E_NON_REENTRANT_NUMBER: [originalString: string, parsedValue: string];
 
     /**
-     * Thrown when attempting to parse a boolean parameter from an invalid string value.
-     * Only 'true' and 'false' are accepted. The invalidValue parameter contains the problematic string.
+     * Thrown when a boolean value is not 'true' or 'false'.
+     * @param invalidValue The invalid boolean string.
      */
     E_BAD_BOOLEAN: [invalidValue: string];
   }

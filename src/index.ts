@@ -349,7 +349,7 @@ class Siso<V extends SisoValue = SisoValue> {
               break;
             }
           } else {
-            throw new YError('E_UNSUPPORTED_TYPE', [pattern]);
+            throw new YError('E_UNSUPPORTED_TYPE', [pattern, pathNode]);
           }
         }
 
