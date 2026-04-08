@@ -1,3 +1,10 @@
+## [9.0.1](https://github.com/nfroidure/siso/compare/v9.0.0...v9.0.1) (2026-04-08)
+
+
+### Bug Fixes
+
+* **types:** fix error types to match `strict-qs` ([ae6cbb6](https://github.com/nfroidure/siso/commit/ae6cbb6896b09d449d4d5b0096b81a7c0ffc14a9))
+
 # [9.0.0](https://github.com/nfroidure/siso/compare/v8.0.0...v9.0.0) (2026-04-07)
 
 # [8.0.0](https://github.com/nfroidure/siso/compare/v7.0.0...v8.0.0) (2026-03-27)
